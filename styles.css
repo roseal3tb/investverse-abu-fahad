@@ -142,7 +142,6 @@ noscript { position: fixed; inset: auto 0 0 0; padding: 16px; text-align: center
 
 /* إشعار منسدل من الأعلى */
 .banner { position: absolute; z-index: 8; top: calc(var(--sb) + 2px); left: 8px; right: 8px; display: flex; align-items: center; gap: 11px; padding: 12px 13px; border-radius: 24px; color: var(--label); background: rgba(246, 246, 246, .84); -webkit-backdrop-filter: blur(28px) saturate(1.8); backdrop-filter: blur(28px) saturate(1.8); box-shadow: 0 10px 34px rgba(0, 0, 0, .22); }
-.banner img { flex: none; width: 38px; height: 38px; padding: 6px; border-radius: 9px; background: linear-gradient(160deg, #123524, #050d09); object-fit: contain; }
 .banner div { display: flex; flex-direction: column; min-width: 0; }
 .banner b { font-size: 15px; font-weight: 600; }
 .banner span { font-size: 14.5px; line-height: 1.4; }
@@ -181,7 +180,7 @@ noscript { position: fixed; inset: auto 0 0 0; padding: 16px; text-align: center
 .notif-copy b { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .notif-copy span { font-size: 15px; line-height: 1.35; opacity: .96; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .notif-card time { position: absolute; top: 12px; inset-inline-end: 15px; font-size: 13px; opacity: .7; }
-.mini-icon { flex: none; width: 38px; height: 38px; border-radius: 9px; overflow: hidden; display: grid; place-items: center; }
+.mini-icon { flex: none; width: 38px; height: 38px; font-size: 38px; border-radius: 9px; overflow: hidden; display: grid; place-items: center; }
 .mini-icon svg { width: 100%; height: 100%; }
 .lock-bottom { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 2.4cqh 46px calc(var(--hb) + 14px); direction: ltr; }
 .lock-round { flex: none; width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; background: rgba(50, 50, 50, .46); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); transition: background-color .2s, color .2s, transform .15s; }
@@ -193,7 +192,7 @@ button.lock-round:active { transform: scale(1.12); }
 /* --------------------------------------------------------------------------
    الشاشة الرئيسية
    -------------------------------------------------------------------------- */
-.home { --icon: min(62px, 15.8cqw); position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; padding: calc(var(--sb) + 2.2cqh) 0 12px; color: #fff; transition: transform .46s cubic-bezier(.2, .85, .2, 1), opacity .3s; }
+.home { --icon: min(62px, 15.8cqw); position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; padding: 0 0 12px; color: #fff; transition: transform .46s cubic-bezier(.2, .85, .2, 1), opacity .3s; }
 .home-waiting { opacity: 0; }
 .home-behind { transform: scale(.9); opacity: 0; }
 .widgets, .home-apps { display: grid; padding: 0 6.4cqw; }
@@ -201,10 +200,6 @@ button.lock-round:active { transform: scale(1.12); }
 .widget-slot { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; }
 .widget { position: relative; width: 100%; aspect-ratio: 1; border-radius: 24px; overflow: hidden; box-shadow: 0 8px 22px rgba(0, 0, 0, .18); }
 .widget-name, .app-name { font-size: 12px; font-weight: 500; text-shadow: 0 1px 4px rgba(0, 0, 0, .45); }
-.widget-calendar { display: flex; flex-direction: column; padding: 14px 16px; color: #000; background: #fff; }
-.cal-day { font-size: 14px; font-weight: 600; color: var(--ios-red); }
-.cal-num { font-size: min(52px, 13cqw); font-weight: 400; line-height: 1.12; }
-.cal-note { margin-top: auto; font-size: 12.5px; line-height: 1.4; color: var(--ios-gray); }
 .widget-photo img { width: 100%; height: 100%; object-fit: cover; }
 .widget-photo::after { content: ''; position: absolute; inset: 45% 0 0; background: linear-gradient(180deg, transparent, rgba(0, 0, 0, .58)); }
 .widget-photo-text { position: absolute; z-index: 1; inset: auto 14px 12px; display: flex; flex-direction: column; color: #fff; }
@@ -214,7 +209,7 @@ button.lock-round:active { transform: scale(1.12); }
 .app-tile { display: flex; flex-direction: column; align-items: center; gap: 6px; width: var(--icon); transition: transform .18s, filter .18s; }
 .app-tile:active { transform: scale(.9); filter: brightness(.72); }
 .app-name { white-space: nowrap; }
-.app-glyph { position: relative; width: var(--icon); height: var(--icon); border-radius: 22.6%; display: grid; place-items: center; box-shadow: 0 4px 10px rgba(0, 0, 0, .16); }
+.app-glyph { position: relative; width: var(--icon); height: var(--icon); font-size: var(--icon); border-radius: 22.6%; display: grid; place-items: center; box-shadow: 0 4px 10px rgba(0, 0, 0, .16); }
 .app-glyph > svg, .mini-icon > svg { border-radius: inherit; display: block; }
 .app-glyph > svg { width: 100%; height: 100%; }
 .icon-whatsapp { background: linear-gradient(180deg, #5df27a, #1caf4a); }
@@ -225,21 +220,27 @@ button.lock-round:active { transform: scale(1.12); }
 .icon-music { background: linear-gradient(180deg, #fc5f77, #f5223e); }
 .icon-vault { background: linear-gradient(160deg, #143826, #040a07); }
 .icon-vault img { width: 66%; height: 66%; object-fit: contain; }
+.icon-camera { background: linear-gradient(180deg, #ececf1, #bcbcc4); }
+.icon-settings { background: linear-gradient(180deg, #8e8e93, #48484a); }
+.icon-appstore { background: linear-gradient(180deg, #2aa7ff, #0a63f0); }
+.icon-phone { background: linear-gradient(180deg, #63e77a, #22b84e); }
+.icon-safari, .icon-gmail, .icon-calendar { background: #fff; overflow: hidden; }
+.cal-ico { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .04em; line-height: 1; color: #000; }
+.cal-ico i { font-style: normal; font-size: .17em; font-weight: 600; color: var(--ios-red); }
+.cal-ico b { font-size: .5em; font-weight: 400; }
 .clock-hands line { transform-box: view-box; transform-origin: 30px 30px; }
 .hand-h { transform: rotate(var(--hand-h, 300deg)); }
 .hand-m { transform: rotate(var(--hand-m, 60deg)); }
 .hand-s { transform: rotate(var(--hand-s, 200deg)); }
 .app-badge { position: absolute; top: -6px; left: -6px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; display: grid; place-items: center; font-size: 13px; font-weight: 600; color: #fff; background: var(--ios-red); }
 .lock-mini { position: absolute; bottom: -4px; right: -4px; width: 21px; height: 21px; border-radius: 50%; display: grid; place-items: center; color: #3a2a00; background: #ffd426; box-shadow: 0 0 0 2px rgba(0, 0, 0, .28); }
-.home-spacer { flex: 1; }
-.home-search { align-self: center; display: flex; align-items: center; gap: 4px; height: 30px; padding: 0 12px; margin-bottom: 12px; border-radius: 15px; font-size: 13.5px; font-weight: 500; background: rgba(120, 120, 120, .34); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); }
 .home-dock { display: grid; grid-template-columns: repeat(4, var(--icon)); justify-content: space-between; margin: 0 3.2cqw; padding: 16px 3.2cqw; border-radius: 36px; background: rgba(190, 190, 190, .3); -webkit-backdrop-filter: blur(26px) saturate(1.5); backdrop-filter: blur(26px) saturate(1.5); }
 
 /* --------------------------------------------------------------------------
    نافذة التطبيق والقوالب المشتركة
    -------------------------------------------------------------------------- */
 .appwin { position: absolute; inset: 0; z-index: 2; overflow: hidden; overflow: clip; background: #000; will-change: transform; }
-.page { --tint: var(--ios-blue); --page-bg: #fff; --bar-bg: rgba(249, 249, 249, .96); position: absolute; inset: 0; display: flex; flex-direction: column; color: var(--label); background: var(--page-bg); }
+.page { --tint: #0a84ff; --page-bg: #000; --card: #1c1c1e; --bar-bg: rgba(28, 28, 30, .94); --hairline: rgba(84, 84, 88, .62); --ios-fill: rgba(118, 118, 128, .24); --ios-group: #000; --label: #fff; --ios-gray: #98989f; color-scheme: dark; position: absolute; inset: 0; display: flex; flex-direction: column; color: var(--label); background: var(--page-bg); }
 .nav { position: relative; z-index: 3; flex: none; padding-top: var(--sb); background: var(--page-bg); transition: box-shadow .2s; }
 .page.scrolled .nav { box-shadow: 0 .5px 0 var(--hairline); }
 .nav-row { position: relative; height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 16px; }
@@ -254,13 +255,14 @@ button.lock-round:active { transform: scale(1.12); }
 .scroll::-webkit-scrollbar, .pv-track::-webkit-scrollbar, .pv-strip::-webkit-scrollbar { display: none; }
 .large-title { margin: 2px 16px 8px; font-size: 34px; font-weight: 700; line-height: 1.25; }
 .search-field { display: flex; align-items: center; gap: 6px; height: 36px; margin: 0 16px 10px; padding: 0 9px; border-radius: 10px; font-size: 17px; color: var(--ios-gray); background: var(--ios-fill); }
-.tabbar { flex: none; display: flex; padding: 7px 4px calc(var(--hb) - 4px); background: var(--bar-bg); box-shadow: 0 -.5px 0 var(--hairline); }
-.tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; color: #999; }
-.tab small { font-size: 10.5px; font-weight: 500; }
-.tab-active { color: var(--tint); }
+.tabbar { position: absolute; z-index: 4; left: 16px; right: 16px; bottom: calc(var(--hb) - 8px); display: flex; padding: 5px; border-radius: 34px; background: rgba(44, 44, 46, .7); -webkit-backdrop-filter: blur(26px) saturate(1.6); backdrop-filter: blur(26px) saturate(1.6); box-shadow: inset 0 0 0 .5px rgba(255, 255, 255, .14), 0 8px 24px rgba(0, 0, 0, .35); }
+.tab { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 7px 0 6px; border-radius: 29px; color: #fff; }
+.tab small { font-size: 10.5px; font-weight: 600; white-space: nowrap; }
+.tab-active { color: var(--tint); background: rgba(255, 255, 255, .12); }
+.page:has(> .tabbar) > .scroll { padding-bottom: 108px; }
 
 /* ---------------------------- واتساب ---------------------------- */
-.page-whatsapp, .page-chat { --tint: #17a34a; }
+.page-whatsapp, .page-chat { --tint: #2fd063; }
 .chat-list { display: flex; flex-direction: column; }
 .chat-preview { display: flex; align-items: center; gap: 12px; width: 100%; padding-inline-start: 16px; }
 .chat-preview:active { background: rgba(0, 0, 0, .06); }
@@ -275,7 +277,7 @@ button.lock-round:active { transform: scale(1.12); }
 .unread { flex: none; align-self: center; min-width: 21px; height: 21px; padding: 0 6px; border-radius: 11px; display: grid; place-items: center; font-size: 12.5px; font-weight: 600; color: #fff; background: var(--tint); }
 .list-end-note { margin: 18px 24px 26px; font-size: 12px; text-align: center; color: #a1a1a6; }
 
-.page-chat { --page-bg: #f6f6f6; }
+.page-chat { --page-bg: #1c1c1e; }
 .chat-nav .nav-row { padding-inline-end: 18px; }
 .chat-head { flex: 1; min-width: 0; display: flex; align-items: center; gap: 9px; }
 .header-avatar { width: 36px; height: 36px; font-size: 16px; }
@@ -307,7 +309,7 @@ button.lock-round:active { transform: scale(1.12); }
 .compose-field { flex: 1; height: 34px; border-radius: 17px; background: #fff; box-shadow: inset 0 0 0 .5px rgba(60, 60, 67, .3); }
 
 /* ---------------------------- بنك إثمار ---------------------------- */
-.page-bank { --tint: var(--brand); --page-bg: var(--ios-group); }
+.page-bank { --tint: #6CB579; --page-bg: #000; }
 .bank-user { display: flex; align-items: center; gap: 10px; }
 .bank-user > span:last-child { display: flex; flex-direction: column; line-height: 1.25; }
 .bank-user small { font-size: 12px; color: var(--ios-gray); }
@@ -360,7 +362,7 @@ button.lock-round:active { transform: scale(1.12); }
 .alarm-none { margin: 26px 16px; font-size: 14px; text-align: center; color: #636366; }
 
 /* ---------------------------- الملاحظات ---------------------------- */
-.page-notes, .page-note { --tint: #d59b00; }
+.page-notes, .page-note { --tint: #ffd60a; }
 .page-notes { --page-bg: var(--ios-group); }
 .notes-section { margin: 14px 20px 8px; font-size: 20px; font-weight: 700; }
 .notes-grid { display: flex; flex-direction: column; margin: 0 16px 8px; border-radius: 12px; background: #fff; overflow: hidden; }
@@ -415,7 +417,7 @@ button.lock-round:active { transform: scale(1.12); }
 .pv-tools { flex: none; display: flex; justify-content: space-between; padding: 10px 28px calc(var(--hb) + 2px); color: var(--tint); }
 
 /* ---------------------------- الأغاني ---------------------------- */
-.page-music { --tint: #fa2d48; }
+.page-music { --tint: #ff375f; }
 .music-scroll { display: flex; flex-direction: column; }
 .empty-music { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 0 38px 16cqh; text-align: center; color: var(--tint); }
 .empty-music h2 { margin-top: 10px; font-size: 22px; font-weight: 700; color: var(--label); }
@@ -444,7 +446,7 @@ button.lock-round:active { transform: scale(1.12); }
 .pass-hint { display: flex; flex-direction: column; gap: 2px; max-width: 290px; margin-top: 4px; padding: 10px 14px; border-radius: 14px; font-size: 13.5px; line-height: 1.55; text-align: center; background: rgba(255, 255, 255, .14); }
 
 /* ---------------------------- INVESTVERSE: بوستر المعرض ---------------------------- */
-.page-invite { --page-bg: #e6eaed; --tint: var(--brand); font-family: var(--brand-font); }
+.page-invite { --page-bg: #e6eaed; --tint: var(--brand); --label: #1c1c1e; color-scheme: light; font-family: var(--brand-font); }
 .invite-content { padding-top: var(--sb); }
 .invite-poster { width: 100%; height: auto; }
 .invite-foot { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 18px 22px calc(var(--hb) + 14px); text-align: center; background: #fff; }
@@ -456,6 +458,233 @@ button.lock-round:active { transform: scale(1.12); }
 .map-button { color: var(--brand); box-shadow: inset 0 0 0 1.5px var(--brand); }
 .closing-disclaimer { max-width: 290px; font-size: 11.5px; line-height: 1.7; color: #8a8f8c; }
 .restart-button { display: flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 18px; font-size: 13.5px; font-weight: 700; color: var(--brand); box-shadow: inset 0 0 0 1px rgba(32, 93, 59, .35); }
+
+/* --------------------------------------------------------------------------
+   صفحات الشاشة الرئيسية وودجت البطارية
+   -------------------------------------------------------------------------- */
+.home-pager { flex: 1; min-height: 0; display: flex; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior: contain; }
+.home-pager::-webkit-scrollbar { display: none; }
+.home-page { flex: 0 0 100%; min-width: 0; scroll-snap-align: start; scroll-snap-stop: always; padding-top: calc(var(--sb) + 2.2cqh); }
+.home-page > .home-apps:first-child { margin-top: 0; }
+.home-dots { align-self: center; display: flex; gap: 8px; padding: 9px 14px; margin-bottom: 8px; border-radius: 14px; }
+.home-dots i { width: 7px; height: 7px; border-radius: 50%; background: rgba(255, 255, 255, .42); transition: background-color .2s; }
+.home-dots i.on { background: #fff; }
+.widget-battery { display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; padding: 16px; color: #fff; background: rgba(30, 30, 32, .74); -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); }
+.bat-ring { --ring: #30d158; width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--ring) calc(var(--p) * 1%), rgba(255, 255, 255, .16) 0); }
+.bat-ring[data-state="low"] { --ring: #ff453a; }
+.bat-ring[data-state="saver"] { --ring: #ffd60a; }
+.bat-ring span { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: #1e1e20; }
+.widget-battery b { font-size: 34px; font-weight: 500; line-height: 1; }
+.sb-air { display: none; width: 15px; height: 15px; fill: currentColor; }
+.phone[data-air] .sb-air { display: block; }
+.phone[data-air] .sb-signal, .phone[data-air] .sb-wifi { display: none; }
+
+/* --------------------------------------------------------------------------
+   الوضع الداكن لعناصر التطبيقات
+   -------------------------------------------------------------------------- */
+.nav-pill { color: #fff; }
+.chat-avatar { color: rgba(0, 0, 0, .66); }
+.chat-background { background: #0b1014; }
+.chat-day { color: #aeb9c0; background: #1c262d; box-shadow: none; }
+.chat-system { color: #e6d98a; background: #2b2817; }
+.message-bubble { color: #fff; background: #232528; box-shadow: none; }
+.bubble-row.me .message-bubble { background: #12523a; }
+.bubble-author { color: #ff86b4; }
+.bubble-row:nth-child(2) .bubble-author { color: #6cb4ff; }
+.bubble-row:nth-child(3) .bubble-author { color: #f0b84a; }
+.bubble-time, .voice-len { color: rgba(255, 255, 255, .55); }
+.voice-play { color: #c9d1d6; }
+.voice-wave i { background: #6b767d; }
+.chat-compose { color: #fff; background: #1c1c1e; }
+.compose-field { background: #2c2c2e; box-shadow: none; }
+.quick-actions span { color: #d1d1d6; }
+.quick-actions i { color: #6CB579; background: #1c1c1e; box-shadow: none; }
+.balance-tag, .transactions, .notes-grid { background: var(--card); }
+.balance-tag span { color: #c7c7cc; }
+.balance-tag b { color: #6CB579; }
+.transaction-icon.pos { color: #30d158; background: rgba(48, 209, 88, .16); }
+.transaction-icon.neg { color: #c7c7cc; background: #2c2c2e; }
+.amount.pos { color: #30d158; }
+.note-meta time { color: #aeaeb2; }
+.check-circle { color: #000; box-shadow: inset 0 0 0 1.5px #5a5a5e; }
+.gallery-tile { background: #1c1c1e; }
+.banner { color: #fff; background: rgba(44, 44, 46, .8); }
+.list-end-note, .sim-disclaimer { color: #6e6e73; }
+
+/* --------------------------------------------------------------------------
+   أزرار زجاجية مشتركة
+   -------------------------------------------------------------------------- */
+.glass-row { height: 52px; }
+.glass-pill, .glass-round, .segmented { background: rgba(118, 118, 128, .26); box-shadow: inset 0 0 0 .5px rgba(255, 255, 255, .1); }
+.glass-pill { height: 40px; padding: 0 16px; border-radius: 20px; display: grid; place-items: center; font-size: 16px; font-weight: 500; }
+.glass-round { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; }
+.glass-big { width: 52px; height: 52px; }
+.segmented { display: flex; padding: 3px; border-radius: 22px; }
+.segmented button { height: 36px; padding: 0 18px; border-radius: 18px; font-size: 15.5px; font-weight: 600; text-align: center; color: #fff; transition: background-color .2s; }
+.segmented button.on { background: rgba(255, 255, 255, .17); }
+
+/* ---------------------------- الهاتف ---------------------------- */
+.call-row { display: flex; align-items: center; gap: 12px; padding: 0 16px; }
+.call-row + .call-row { box-shadow: inset 0 .5px 0 var(--hairline); }
+.call-row .chat-avatar { width: 46px; height: 46px; font-size: 20px; }
+.call-copy { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; padding: 12px 0; }
+.call-copy strong { font-size: 17px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.call-copy strong.is-missed { color: #ff453a; }
+.call-copy small { display: flex; align-items: center; gap: 4px; font-size: 14.5px; color: var(--ios-gray); }
+.call-row time { flex: none; font-size: 15px; color: var(--ios-gray); }
+.call-info { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font: 600 17px Georgia, serif; color: #0a84ff; background: rgba(118, 118, 128, .22); }
+
+/* ---------------------------- الإعدادات ---------------------------- */
+.set-scroll { padding-bottom: 96px; }
+.set-group { margin: 0 16px 24px; border-radius: 24px; background: var(--card); overflow: hidden; }
+.set-row, .set-profile { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 16px; }
+.set-row + .set-row, .set-profile + .set-row { box-shadow: inset 0 .5px 0 var(--hairline); }
+.set-profile { padding: 14px 16px; }
+.set-avatar { flex: none; width: 60px; height: 60px; border-radius: 50%; display: grid; place-items: center; font-size: 26px; font-weight: 600; color: #fff; background: linear-gradient(150deg, #8e8e93, #48484a); }
+.set-profile-copy { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.set-profile-copy strong { font-size: 21px; font-weight: 600; }
+.set-profile-copy small { font-size: 13.5px; color: var(--ios-gray); }
+.set-ico { flex: none; width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; background: #2c2c2e; box-shadow: inset 0 0 0 .5px rgba(255, 255, 255, .08); }
+.set-label { flex: 1; font-size: 17px; }
+.set-value { font-size: 16.5px; color: var(--ios-gray); white-space: nowrap; }
+.set-chev { display: grid; color: #5a5a5e; margin-inline-end: -4px; }
+.float-search { position: absolute; z-index: 4; left: 22px; right: 22px; bottom: calc(var(--hb) - 6px); display: flex; align-items: center; gap: 8px; height: 46px; padding: 0 16px; border-radius: 23px; font-size: 17px; color: #aeaeb2; background: rgba(58, 58, 60, .78); -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); box-shadow: inset 0 0 0 .5px rgba(255, 255, 255, .14), 0 8px 24px rgba(0, 0, 0, .4); }
+.float-search span { flex: 1; }
+
+/* ---------------------------- التقويم ---------------------------- */
+.cal-head { font-size: 25px; font-weight: 700; color: #8e8e93; }
+.cal-head b { color: #fff; }
+.cal-week, .cal-month { display: grid; grid-template-columns: repeat(7, 1fr); }
+.cal-week { padding: 4px 6px 6px; font-size: 12.5px; font-weight: 600; text-align: center; box-shadow: 0 .5px 0 var(--hairline); }
+.cal-week .is-weekend { color: #8e8e93; }
+.cal-scroll { padding: 0 6px 120px; }
+.cal-month { margin-top: 8px; }
+.cal-month-label { padding: 8px 8px 4px; font-size: 22px; font-weight: 700; }
+.cal-month-label.is-current { color: #ff453a; }
+.cal-cell { display: flex; flex-direction: column; align-items: center; gap: 3px; min-height: 72px; padding-top: 6px; color: #fff; box-shadow: inset 0 .5px 0 var(--hairline); }
+.cal-n { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 42px; height: 42px; padding: 0 2px; border-radius: 21px; line-height: 1.08; }
+.cal-n b { font-size: 20px; font-weight: 600; }
+.cal-n small { font-size: 10.5px; color: #98989f; white-space: nowrap; }
+.cal-n small.hj-first { font-size: 9px; color: #fff; box-shadow: 0 1px 0 #ff453a; }
+.cal-cell.is-weekend b { color: #8e8e93; }
+.cal-cell.is-today .cal-n { background: #ff453a; }
+.cal-cell.is-today b, .cal-cell.is-today small { color: #fff; }
+.cal-dots { display: flex; gap: 2px; height: 6px; }
+.cal-dots i { width: 6px; height: 6px; border-radius: 50%; }
+button.cal-cell:active .cal-n { background: rgba(255, 255, 255, .16); }
+.cal-float { position: absolute; z-index: 4; left: 18px; right: 18px; bottom: calc(var(--hb) - 6px); display: flex; align-items: center; justify-content: space-between; }
+.cal-today, .cal-tools, .cal-float .glass-round { background: rgba(58, 58, 60, .78); -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); box-shadow: inset 0 0 0 .5px rgba(255, 255, 255, .14), 0 8px 24px rgba(0, 0, 0, .4); }
+.cal-today { width: 56px; height: 56px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.05; }
+.cal-today small { font-size: 9.5px; font-weight: 700; }
+.cal-today b { font-size: 20px; font-weight: 600; }
+.cal-tools { display: flex; align-items: center; gap: 28px; height: 54px; padding: 0 26px; border-radius: 27px; }
+.cal-float .glass-big { width: 56px; height: 56px; }
+
+/* ---------------------------- App Store ---------------------------- */
+.store-scroll { padding: calc(var(--sb) + 8px) 16px 0; }
+.store-head { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 14px; }
+.store-head small { font-size: 13.5px; font-weight: 600; color: var(--ios-gray); }
+.store-head h1 { font-size: 34px; font-weight: 700; line-height: 1.2; }
+.store-avatar { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-weight: 600; background: linear-gradient(150deg, #8e8e93, #48484a); }
+.store-card { position: relative; overflow: hidden; margin-bottom: 18px; border-radius: 24px; background: var(--card); }
+.store-feature { display: flex; flex-direction: column; justify-content: flex-end; min-height: 410px; background: linear-gradient(165deg, #1d5a40 0, #0d3323 55%, #0a2a1e 100%); }
+.store-art { position: absolute; inset: 20px 0 auto 0; width: 100%; height: 240px; }
+.store-feature-copy { position: relative; padding: 0 18px 14px; }
+.store-feature-copy small { font-size: 13.5px; font-weight: 700; color: rgba(255, 255, 255, .72); }
+.store-feature-copy h2 { font-size: 27px; font-weight: 700; line-height: 1.32; text-wrap: balance; }
+.store-app-row { position: relative; display: flex; align-items: center; gap: 12px; padding: 12px 16px; }
+.store-feature .store-app-row { background: rgba(0, 0, 0, .26); }
+.store-list h2 { padding: 16px 16px 4px; font-size: 21px; font-weight: 700; }
+.store-list .store-app-row + .store-app-row { box-shadow: inset 0 .5px 0 var(--hairline); }
+.store-app-row .mini-icon, .store-tile { flex: none; width: 50px; height: 50px; border-radius: 12px; font-size: 50px; }
+.store-tile { display: grid; place-items: center; font-size: 23px; font-weight: 700; color: #fff; background: linear-gradient(160deg, #48484a, #2c2c2e); box-shadow: inset 0 0 0 .5px rgba(255, 255, 255, .1); }
+.store-app-copy { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.store-app-copy strong { font-size: 15.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.store-app-copy small { font-size: 12.5px; color: var(--ios-gray); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.store-get { flex: none; min-width: 76px; height: 30px; padding: 0 14px; border-radius: 15px; font-size: 14px; font-weight: 700; text-align: center; color: #0a84ff; background: rgba(118, 118, 128, .28); }
+.store-feature .store-get { color: #fff; background: rgba(255, 255, 255, .24); }
+.store-get.is-loading { min-width: 0; width: 28px; height: 28px; margin: 0 24px; padding: 0; border-radius: 50%; background: none; border: 2.5px solid rgba(118, 118, 128, .4); border-top-color: #0a84ff; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------------------------- Safari ---------------------------- */
+.page-safari { --page-bg: #111113; }
+.safari-scroll { padding: calc(var(--sb) + 10px) 18px 24px; }
+.saf-h { margin: 16px 2px 12px; font-size: 21px; font-weight: 700; }
+.saf-favs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 6px; }
+.saf-fav { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; }
+.saf-fav i { width: 60px; height: 60px; border-radius: 14px; display: grid; place-items: center; font-style: normal; font-size: 28px; background: #2c2c2e; }
+.saf-fav small { font-size: 12px; line-height: 1.3; text-align: center; color: #d1d1d6; }
+.saf-card { border-radius: 18px; background: var(--card); overflow: hidden; }
+.saf-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; }
+.saf-row + .saf-row { box-shadow: inset 0 .5px 0 var(--hairline); }
+.saf-row-ico { flex: none; width: 38px; height: 38px; border-radius: 9px; display: grid; place-items: center; color: #0a84ff; background: #2c2c2e; }
+.saf-row strong { display: block; font-size: 15.5px; font-weight: 500; line-height: 1.4; }
+.saf-row small { display: block; font-size: 12.5px; color: var(--ios-gray); }
+.saf-search { font-size: 15.5px; }
+.saf-search svg { flex: none; color: var(--ios-gray); }
+.saf-bar { flex: none; padding: 8px 14px calc(var(--hb) - 2px); background: rgba(28, 28, 30, .96); box-shadow: 0 -.5px 0 var(--hairline); }
+.saf-url { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 14px; border-radius: 22px; font-size: 16px; color: var(--ios-gray); background: rgba(118, 118, 128, .28); }
+.saf-url span { flex: 1; }
+.saf-tools { display: flex; justify-content: space-between; padding: 12px 8px 0; color: #0a84ff; }
+
+/* ---------------------------- الكاميرا ---------------------------- */
+.cam-top { flex: none; display: flex; justify-content: space-between; padding: calc(var(--sb) + 4px) 18px 10px; }
+.cam-view { position: relative; flex: 1; min-height: 0; overflow: hidden; }
+.cam-view img { width: 100%; height: 100%; object-fit: cover; }
+.cam-zoom { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; padding: 4px; border-radius: 22px; background: rgba(0, 0, 0, .38); }
+.cam-zoom span { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 600; background: rgba(0, 0, 0, .35); }
+.cam-zoom span.on { width: 36px; height: 36px; color: #ffd60a; }
+.cam-flash { position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; }
+.cam-flash.on { animation: cam-flash .3s ease-out; }
+@keyframes cam-flash { 0%, 35% { opacity: 1; } 100% { opacity: 0; } }
+.cam-modes { flex: none; display: flex; justify-content: center; gap: 24px; padding: 14px 0 4px; font-size: 13.5px; font-weight: 600; }
+.cam-modes span.on { color: #ffd60a; }
+.cam-controls { flex: none; display: flex; align-items: center; justify-content: space-between; padding: 12px 30px calc(var(--hb) + 16px); }
+.cam-thumb { width: 50px; height: 50px; border-radius: 10px; overflow: hidden; }
+.cam-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.cam-shutter { width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center; box-shadow: inset 0 0 0 4px #fff; }
+.cam-shutter span { width: 60px; height: 60px; border-radius: 50%; background: #fff; transition: transform .1s; }
+.cam-shutter:active span { transform: scale(.86); }
+
+/* ---------------------------- Gmail ---------------------------- */
+.page-gmail, .page-mailmsg { --page-bg: #1c1d21; --tint: #a8c7fa; }
+.mail-nav { padding: calc(var(--sb) + 2px) 12px 6px; }
+.mail-search { display: flex; align-items: center; gap: 14px; height: 54px; padding: 0 18px; padding-inline-end: 8px; border-radius: 27px; font-size: 17px; color: #c7c7cc; background: #2c2d31; }
+.mail-search span:nth-child(2) { flex: 1; }
+.mail-me { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-weight: 600; color: #fff; background: #1f4fa3; box-shadow: 0 0 0 2.5px #4d8dff; }
+.mail-scroll { padding: 0 8px 150px; }
+.mail-label { margin: 14px 14px 12px; font-size: 13.5px; color: #c7c7cc; }
+.mail-row { display: flex; align-items: flex-start; gap: 14px; width: 100%; margin-bottom: 3px; padding: 13px 14px; border-radius: 6px; color: #c9c9ce; background: #131315; }
+.mail-scroll > .mail-row:first-of-type { border-radius: 18px 18px 6px 6px; }
+.mail-scroll > .mail-row:last-of-type { border-radius: 6px 6px 18px 18px; }
+button.mail-row:active { background: #1f2024; }
+.mail-avatar { flex: none; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font-size: 18px; font-weight: 600; color: #fff; }
+.mail-copy { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.mail-top { display: flex; align-items: center; gap: 8px; }
+.mail-top strong { flex: 1; min-width: 0; font-size: 17px; font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mail-top time { flex: none; font-size: 12.5px; }
+.mail-copy b { font-size: 14.5px; font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mail-copy small { font-size: 14.5px; color: #9b9ba1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mail-row.is-unread strong, .mail-row.is-unread b, .mail-row.is-unread time { font-weight: 700; color: #fff; }
+.mail-dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: #8ab4f8; }
+.mail-star { align-self: flex-end; display: grid; color: #9b9ba1; }
+.mail-star.on { color: #fbbc04; }
+.mail-ad { font-style: normal; font-size: 11px; font-weight: 700; padding: 1px 6px; border-radius: 4px; color: #131315; background: #fbbc04; }
+.mail-bundle { align-items: center; }
+.mail-bundle-ico { flex: none; width: 42px; display: grid; place-items: center; }
+.mail-bundle strong { font-size: 17px; font-weight: 700; color: #fff; }
+.mail-chip { flex: none; padding: 3px 10px; border-radius: 12px; font-size: 12.5px; font-weight: 600; }
+.mail-compose { position: absolute; z-index: 4; left: 16px; bottom: calc(var(--hb) + 64px); display: flex; align-items: center; gap: 10px; height: 54px; padding: 0 20px; border-radius: 18px; font-size: 15.5px; font-weight: 600; color: #d7e3ff; background: #234a9c; box-shadow: 0 6px 16px rgba(0, 0, 0, .45); }
+.mail-bar { flex: none; display: flex; justify-content: space-around; padding: 10px 0 calc(var(--hb) + 2px); background: #1c1d21; box-shadow: 0 -.5px 0 rgba(255, 255, 255, .1); }
+.mail-tab { position: relative; width: 64px; height: 32px; border-radius: 16px; display: grid; place-items: center; color: #c7c7cc; }
+.mail-tab.on { color: #d7e3ff; background: #1d4079; }
+.mail-tab i { position: absolute; top: -8px; left: -8px; min-width: 22px; height: 18px; padding: 0 5px; border-radius: 9px; display: grid; place-items: center; font-style: normal; font-size: 11.5px; font-weight: 700; color: #601410; background: #f2b8b5; }
+.mail-open { padding: 6px 18px 40px; user-select: text; -webkit-user-select: text; }
+.mail-open h1 { margin-bottom: 20px; font-size: 22px; font-weight: 400; line-height: 1.45; }
+.mail-inbox-chip { padding: 2px 7px; border-radius: 5px; font-size: 11.5px; vertical-align: middle; color: #c7c7cc; background: #2c2d31; }
+.mail-sender { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.mail-sender strong { font-weight: 600; color: #fff; }
+.mail-body p { margin-bottom: 12px; font-size: 16px; line-height: 1.85; color: #e3e3e6; }
 
 /* --------------------------------------------------------------------------
    الجوالات الحقيقية: التجربة تملأ الشاشة بدون إطار

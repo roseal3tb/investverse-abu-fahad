@@ -65,7 +65,7 @@
   const photoOrder = photos.map((_, i) => i).sort((a, b) => photos[a].date - photos[b].date);
 
   const chats = [
-    { id: 'wife', name: 'أم فهد ❤️', preview: 'الله يكتب اللي فيه ❤️', avatar: 'أ', unread: 1, color: '#f4b8b0', ago: 11, gap: 2, seen: true },
+    { id: 'wife', name: 'أم فهد ❤️', preview: 'الله يكتب اللي فيه الخير ❤️', avatar: 'أ', unread: 1, color: '#f4b8b0', ago: 11, gap: 2, seen: true },
     { id: 'friend', name: 'أبو سعد', preview: 'لقيت طريقة، بقولك عنها بعدين', avatar: 'س', unread: 0, color: '#b9c6a2', ago: 86, gap: 1, type: 'متصل الآن', mine: true },
     { id: 'aunt', name: 'خالتي موضي 🌸', preview: 'صباح الخير 🌹', avatar: '🌸', unread: 3, color: '#f6cfe3', ago: 219, gap: 1, seen: true },
     { id: 'group', name: '🚀 توصيات مضمونة', preview: 'أبو فهد غادر المجموعة', avatar: '🚀', unread: 0, color: '#cfe3d4', day: 'أمس', start: '21:08', type: 'أبو خالد، أبو ريان، +٩٦٦٥٠… و٢٥٣ آخرين' },
@@ -92,7 +92,7 @@
       { who: 'them', text: 'ما شاء الله، صاير خبير 😂' },
       { who: 'them', text: 'طيب وموضوع السهم اللي يتكلمون عنه في القروب؟' },
       { who: 'me', text: 'قررت قراري… أعلمك لما أرجع 🤝' },
-      { who: 'them', text: 'الله يكتب اللي فيه ❤️' },
+      { who: 'them', text: 'الله يكتب اللي فيه الخير ❤️' },
     ],
     friend: [
       { who: 'them', text: 'الشقة بالدور ٤ والإطلالة حلوة' },
@@ -207,6 +207,41 @@
     torch: '<path d="M8 3h8v3.500l-2 3V20a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V9.500l-2-3V3Zm0 3.500h8M12 12.500v2"/>',
     play: '<path d="M8 5.500v13l11-6.500-11-6.500Z" fill="currentColor"/>',
   };
+  Object.assign(icons, {
+    airplane: '<path fill="currentColor" stroke="none" d="M10.6 3.6c0-.9.6-1.6 1.4-1.6s1.4.7 1.4 1.6V9l7.6 4.6v1.9l-7.6-2.3v4.6l2.4 1.8v1.6L12 20.3l-3.8.9v-1.6l2.4-1.8v-4.6L3 15.5v-1.9L10.6 9V3.6Z"/>',
+    wifi: '<path d="M2.5 9.2a14 14 0 0 1 19 0M5.6 12.6a9.4 9.4 0 0 1 12.8 0M8.8 16a4.8 4.8 0 0 1 6.4 0"/><circle cx="12" cy="19.2" r="1.1" fill="currentColor"/>',
+    bluetooth: '<path d="m7 7.5 10 9-5 4.5V3l5 4.5-10 9"/>',
+    link: '<path d="M9.5 14.5a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14.5 9.5a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+    batteryIco: '<rect x="2.5" y="7.5" width="17" height="9" rx="2.6" fill="currentColor"/><path d="M21.6 10.6v2.8"/>',
+    access: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="7.6" r="1.1" fill="currentColor"/><path d="M7.5 10.2h9M12 10.2v4.3M9.5 18l2.5-3.5 2.5 3.5"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2.5V5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/>',
+    bell: '<path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15l1.5-2ZM10 20.6a2 2 0 0 0 4 0"/>',
+    speaker: '<path d="M4 9.5v5h3.5l5 4v-13l-5 4H4ZM16 9a4.5 4.5 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/>',
+    moon: '<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/>',
+    hourglass: '<path d="M7 3h10M7 21h10M8 3v4l4 5-4 5v4M16 3v4l-4 5 4 5v4"/>',
+    star: '<path d="m12 3 2.7 5.7 6.3.8-4.6 4.3 1.2 6.2L12 17l-5.6 3 1.2-6.2L3 9.5l6.3-.8L12 3Z"/>',
+    person: '<circle cx="12" cy="8.5" r="3.6"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/>',
+    keypad: '<g fill="currentColor" stroke="none"><circle cx="6" cy="6" r="1.9"/><circle cx="12" cy="6" r="1.9"/><circle cx="18" cy="6" r="1.9"/><circle cx="6" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="18" cy="12" r="1.9"/><circle cx="6" cy="18" r="1.9"/><circle cx="12" cy="18" r="1.9"/><circle cx="18" cy="18" r="1.9"/></g>',
+    voicemail: '<circle cx="6.5" cy="12" r="3.8"/><circle cx="17.5" cy="12" r="3.8"/><path d="M6.5 15.8h11"/>',
+    clockIco: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5H8.5"/>',
+    arrowOut: '<path d="M7 17 17 7M9 7h8v8"/>',
+    arrowIn: '<path d="M17 7 7 17M7 9v8h8"/>',
+    menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
+    filter: '<path d="M4 7h16M7 12h10M10 17h4"/>',
+    tag: '<path d="M3.5 12.5v-8h8l9 9-8 8-9-9Z"/><circle cx="8" cy="9" r="1.2" fill="currentColor"/>',
+    inbox: '<path d="M3.5 13.5 6 5h12l2.5 8.5V19h-17v-5.5Zm0 0H9a3 3 0 0 0 6 0h5.5"/>',
+    mail: '<rect x="3" y="5" width="18" height="14" rx="2.6"/><path d="m3.6 7.2 8.4 6.3 8.4-6.3"/>',
+    pencil: '<path d="m4 20 1-4.5L16.5 4 20 7.5 8.5 19 4 20Z"/>',
+    today: '<rect x="5" y="3" width="14" height="18" rx="3"/><path d="M8.5 8h7M8.5 12h7"/>',
+    rocket: '<path d="M12 3c4 2 6 6 5 11l-2.5 2h-5L7 14C6 9 8 5 12 3Zm-2.5 13L8 20.5M14.5 16l1.5 4.5"/><circle cx="12" cy="9.5" r="1.8"/>',
+    layers: '<path d="m12 4 9 4.5-9 4.5-9-4.5L12 4Zm-9 8.5 9 4.5 9-4.5M3 16.5 12 21l9-4.5"/>',
+    joystick: '<circle cx="12" cy="6" r="2.5"/><path d="M12 8.5v6M4 15l8-3.5 8 3.5-8 4-8-4Z"/>',
+    book: '<path d="M4 5.5c3-1.5 5.5-1.5 8 0v14c-2.5-1.5-5-1.5-8 0v-14Zm8 0c2.5-1.5 5-1.5 8 0v14c-3-1.5-5.5-1.5-8 0"/>',
+    tabsIco: '<rect x="4" y="8" width="12" height="12" rx="2.6"/><path d="M8 8V6.5A2.5 2.5 0 0 1 10.5 4h7A2.5 2.5 0 0 1 20 6.5v7a2.5 2.5 0 0 1-2.5 2.5H16"/>',
+    flip: '<path d="M4 9a8 8 0 0 1 14.5-2.5M20 15a8 8 0 0 1-14.5 2.5M18.5 3v4h-4M5.5 21v-4h4"/>',
+    bolt: '<path d="M13 2.5 5 13.5h6l-1 8 8-11h-6l1-8Z"/>',
+    archive: '<rect x="3" y="4.5" width="18" height="4.5" rx="1.2"/><path d="M5 9v9.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/>',
+  });
   function svg(name, size = 22, extra = '') {
     return `<svg aria-hidden="true" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ${extra}>${(icons[name] || '').replace(/(\d)00\b/g, '$1')}</svg>`;
   }
@@ -224,19 +259,39 @@
     music: '<svg viewBox="0 0 60 60" aria-hidden="true"><path fill="#fff" d="M40.500 14.500 24 18a2 2 0 0 0-1.600 2v17.800a6.200 6.200 0 1 0 3 5.300V25.800l13.600-2.900v11.900a6.200 6.200 0 1 0 3 5.300V16.500a2 2 0 0 0-1.500-2Z"/></svg>',
   };
   Object.keys(appArt).forEach(k => { appArt[k] = appArt[k].replace(/(\d)00\b/g, '$1'); });
+  Object.assign(appArt, {
+    camera: '<svg viewBox="0 0 60 60" aria-hidden="true"><path fill="#2b2b2e" d="M14 22.5a4 4 0 0 1 4-4h5l2.2-3.3a2.5 2.5 0 0 1 2-1.2h5.6a2.5 2.5 0 0 1 2 1.200L37 18.5h5a4 4 0 0 1 4 4V41a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V22.5Z"/><circle cx="30" cy="31.5" r="8.4" fill="#d9d9de"/><circle cx="30" cy="31.5" r="5.6" fill="#2b2b2e"/><circle cx="41" cy="23.5" r="1.5" fill="#ffcc00"/></svg>'.replace('1.200L', '1.2L'),
+    settings: '<svg viewBox="0 0 60 60" aria-hidden="true"><g fill="none" stroke="#e9e9ee" stroke-linecap="round"><circle cx="30" cy="30" r="14.5" stroke-width="3.4"/><circle cx="30" cy="30" r="5.2" stroke-width="3"/><path stroke-width="4.4" d="M30 9.5v5M30 45.5v5M9.5 30h5M45.5 30h5M15.5 15.5l3.6 3.6M40.900 40.900l3.6 3.6M15.5 44.500l3.6-3.6M40.900 19.100l3.6-3.6"/></g></svg>'.replace(/\.(\d)00/g, '.$1'),
+    appstore: '<svg viewBox="0 0 60 60" aria-hidden="true"><g fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 24h26l-2 21a3 3 0 0 1-3 2.700H22a3 3 0 0 1-3-2.700L17 24Z"/><path d="M23.5 24v-3.500a6.500 6.500 0 0 1 13 0V24"/><path d="M30 30v9.500m-4.200-4 4.200 4 4.200-4"/></g></svg>'.replace(/\.(\d)00/g, '.$1'),
+    phone: '<svg viewBox="0 0 60 60" aria-hidden="true"><g transform="translate(9.6 9.2) scale(1.7)" fill="#fff" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"><path d="M6.5 3.5h3l1.5 4.5-2 1.5a11 11 0 0 0 5.5 5.5l1.5-2 4.5 1.5v3a2 2 0 0 1-2 2A15.5 15.5 0 0 1 4.5 5.5a2 2 0 0 1 2-2Z"/></g></svg>',
+    safari: '<svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="20" fill="#1a8cff"/><g fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M10.500 30h39M30 10.500c7.500 6.500 7.500 32.500 0 39M30 10.500c-7.500 6.500-7.500 32.500 0 39M13.500 20.500h33M13.500 39.500h33"/></g></svg>'.replace(/\.(\d)00/g, '.$1'),
+    gmail: '<svg viewBox="0 0 60 60" aria-hidden="true"><rect x="11" y="17" width="38" height="27" rx="4.500" fill="#fff" stroke="#e5484d" stroke-width="3.6"/><path d="m13.500 21 16.500 12.500L46.500 21" fill="none" stroke="#e5484d" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'.replace(/\.(\d)00/g, '.$1'),
+  });
+  function iconArt(id) {
+    if (id === 'vault') return '<img src="assets/investverse-icon.png" alt="" draggable="false"/>';
+    if (id === 'calendar') { const d = new Date(); return `<span class="cal-ico"><i>${DAYS[d.getDay()]}</i><b>${ar(d.getDate())}</b></span>`; }
+    return appArt[id] || '';
+  }
 
+  /* صفحتان للشاشة الرئيسية + الـDock الثابت */
   const appIcons = [
-    { id: 'bank', title: 'بنك إثمار', where: 'grid' },
-    { id: 'alarm', title: 'المنبّه', where: 'grid' },
-    { id: 'vault', title: 'INVESTVERSE', where: 'grid', locked: true },
-    { id: 'whatsapp', title: 'واتساب', where: 'dock', badge: 4 },
+    { id: 'calendar', title: 'التقويم', where: 'p1' },
+    { id: 'alarm', title: 'الساعة', where: 'p1' },
+    { id: 'notes', title: 'الملاحظات', where: 'p1' },
+    { id: 'appstore', title: 'App Store', where: 'p1' },
+    { id: 'settings', title: 'الإعدادات', where: 'p1' },
+    { id: 'whatsapp', title: 'واتساب', where: 'p2', badge: 4 },
+    { id: 'gmail', title: 'Gmail', where: 'p2', badge: 3 },
+    { id: 'vault', title: 'INVESTVERSE', where: 'p2', locked: true },
+    { id: 'music', title: 'الأغاني', where: 'p2' },
+    { id: 'bank', title: 'بنك إثمار', where: 'p2' },
+    { id: 'phone', title: 'الهاتف', where: 'dock', badge: 2 },
+    { id: 'safari', title: 'Safari', where: 'dock' },
+    { id: 'camera', title: 'الكاميرا', where: 'dock' },
     { id: 'photos', title: 'الصور', where: 'dock' },
-    { id: 'notes', title: 'الملاحظات', where: 'dock' },
-    { id: 'music', title: 'الأغاني', where: 'dock' },
   ];
-  const appRoutes = { whatsapp: 'whatsapp', bank: 'bank', alarm: 'alarm', notes: 'notes', photos: 'photos', music: 'music', vault: 'vault' };
-  const parentRoute = { chat: 'whatsapp', note: 'notes', photo: 'photos' };
-  const lightBarRoutes = ['lock', 'home', 'alarm', 'photo', 'vault'];
+  const appRoutes = { whatsapp: 'whatsapp', bank: 'bank', alarm: 'alarm', notes: 'notes', photos: 'photos', music: 'music', vault: 'vault', calendar: 'calendar', settings: 'settings', appstore: 'appstore', gmail: 'gmail', phone: 'phone', safari: 'safari', camera: 'camera' };
+  const parentRoute = { chat: 'whatsapp', note: 'notes', photo: 'photos', mailmsg: 'gmail' };
 
   /* ------------------------------------------------------------------ *
    * الحالة
@@ -280,7 +335,7 @@
   function buzz(pattern = 8) { try { navigator.vibrate?.(pattern); } catch { /* غير مدعوم */ } }
   function setChrome() {
     phone.dataset.route = route;
-    phone.dataset.bar = lightBarRoutes.includes(route) ? 'light' : 'dark';
+    phone.dataset.bar = route === 'invite' ? 'dark' : 'light';
   }
   function tick() {
     const now = new Date();
@@ -294,9 +349,9 @@
     phone.style.setProperty('--hand-m', `${m * 6}deg`);
     phone.style.setProperty('--hand-s', `${s * 6}deg`);
   }
-  function notify(text, title = 'INVESTVERSE') {
+  function notify(text, title = 'INVESTVERSE', app = 'vault') {
     clearTimeout(toastTimer);
-    toastElement.innerHTML = `<img src="assets/investverse-icon.png" alt="" /><div><b>${esc(title)}</b><span>${esc(text)}</span></div>`;
+    toastElement.innerHTML = `${miniIcon(app)}<div><b>${esc(title)}</b><span>${esc(text)}</span></div>`;
     toastElement.hidden = false;
     toastElement.classList.remove('banner-exit');
     void toastElement.offsetWidth;
@@ -326,6 +381,9 @@
     batteryEl.style.setProperty('--bat', `${battery}%`);
     batteryEl.dataset.state = lowPower ? 'saver' : battery <= 20 ? 'low' : 'normal';
     batteryEl.setAttribute('aria-label', `البطارية ${ar(battery)}٪`);
+    document.querySelectorAll('.js-battery').forEach(el => { el.textContent = `${ar(battery)}٪`; });
+    const ring = $('.bat-ring', homeEl);
+    if (ring) { ring.style.setProperty('--p', battery); ring.dataset.state = batteryEl.dataset.state; }
   }
   function showBatteryAlert() {
     $('#alert-text', alertEl).textContent = `باقي ${ar(battery)}٪ من شحن البطارية.`;
@@ -355,8 +413,7 @@
    * شاشة القفل
    * ------------------------------------------------------------------ */
   function miniIcon(id) {
-    if (id === 'vault') return '<span class="mini-icon icon-vault"><img src="assets/investverse-icon.png" alt="" /></span>';
-    return `<span class="mini-icon icon-${id}">${appArt[id]}</span>`;
+    return `<span class="mini-icon icon-${id}">${iconArt(id)}</span>`;
   }
   function renderLock() {
     const wifeTime = `منذ ${ar(11)} د`;
@@ -369,7 +426,7 @@
       </div>
       <div class="lock-message"><strong>هذا الجوال مفقود</strong><span>إذا لقيته، تواصل مع أبو فهد.</span></div>
       <div class="notification-stack">
-        <button type="button" class="notif-card" data-action="notif" data-open="whatsapp" data-open-chat="wife">${miniIcon('whatsapp')}<span class="notif-copy"><b>أم فهد ❤️</b><span>الله يكتب اللي فيه ❤️</span></span><time>${wifeTime}</time></button>
+        <button type="button" class="notif-card" data-action="notif" data-open="whatsapp" data-open-chat="wife">${miniIcon('whatsapp')}<span class="notif-copy"><b>أم فهد ❤️</b><span>الله يكتب اللي فيه الخير ❤️</span></span><time>${wifeTime}</time></button>
         <button type="button" class="notif-card" data-action="notif" data-open="bank">${miniIcon('bank')}<span class="notif-copy"><b>بنك إثمار</b><span>تم إيداع توزيعات أرباح</span></span><time>${bankTime}</time></button>
         <button type="button" class="notif-card" data-action="notif" data-open="whatsapp" data-open-chat="group">${miniIcon('whatsapp')}<span class="notif-copy"><b>🚀 توصيات مضمونة</b><span>يا جماعة السهم بيطير بكرة !! 🚀</span></span><time>أمس</time></button>
       </div>
@@ -403,6 +460,7 @@
     homeEl.classList.add('home-waiting');
     homeEl.inert = true;
     renderLock(); renderHome();
+    callsFilter = 'all'; airplane = false; delete phone.dataset.air;
     startBattery();
     lockEl.hidden = false; lockEl.style.pointerEvents = '';
     setChrome();
@@ -414,22 +472,43 @@
    * ------------------------------------------------------------------ */
   function iconTile(app, withLabel) {
     const locked = app.locked && !vaultOpen;
-    const art = app.id === 'vault' ? '<img src="assets/investverse-icon.png" alt="" draggable="false"/>' : appArt[app.id];
+    const art = iconArt(app.id);
     return `<button class="app-tile" type="button" data-action="open-app" data-app="${app.id}" aria-label="${esc(app.title)}${locked ? '، مقفول' : ''}">
       <span class="app-glyph icon-${app.id}">${art}${app.badge ? `<span class="app-badge">${ar(app.badge)}</span>` : ''}${locked ? `<span class="lock-mini">${svg('lock', 11, 'stroke-width="2.4"')}</span>` : ''}</span>
       ${withLabel ? `<span class="app-name" dir="auto">${esc(app.title)}</span>` : ''}</button>`;
   }
   function renderHome() {
-    const today = new Date();
+    const grid = where => appIcons.filter(a => a.where === where).map(a => iconTile(a, true)).join('');
     homeEl.innerHTML = `
-      <div class="widgets">
-        <div class="widget-slot"><div class="widget widget-calendar"><span class="cal-day">${DAYS[today.getDay()]}</span><span class="cal-num">${ar(today.getDate())}</span><span class="cal-note">لا توجد أحداث أخرى اليوم</span></div><span class="widget-name">التقويم</span></div>
-        <div class="widget-slot"><button type="button" class="widget widget-photo" data-action="open-widget" data-target="photos" aria-label="ودجت الصور: جلسة بر"><img src="${photo('desert-camp.webp')}" alt="" draggable="false"/><span class="widget-photo-text"><b>جلسة بر</b><small>${dayMonth(photos[2].date)}</small></span></button><span class="widget-name">الصور</span></div>
+      <div class="home-pager" id="home-pager">
+        <section class="home-page" aria-label="الصفحة الأولى">
+          <div class="widgets">
+            <div class="widget-slot"><div class="widget widget-battery"><span class="bat-ring" style="--p:${battery}" data-state="normal"><span>${svg('batteryIco', 26)}</span></span><b class="js-battery">${ar(battery)}٪</b></div><span class="widget-name">البطاريات</span></div>
+            <div class="widget-slot"><button type="button" class="widget widget-photo" data-action="open-widget" data-target="photos" aria-label="ودجت الصور: جلسة بر"><img src="${photo('desert-camp.webp')}" alt="" draggable="false"/><span class="widget-photo-text"><b>جلسة بر</b><small>${dayMonth(photos[2].date)}</small></span></button><span class="widget-name">الصور</span></div>
+          </div>
+          <div class="home-apps">${grid('p1')}</div>
+        </section>
+        <section class="home-page" aria-label="الصفحة الثانية">
+          <div class="home-apps">${grid('p2')}</div>
+        </section>
       </div>
-      <div class="home-apps">${appIcons.filter(a => a.where === 'grid').map(a => iconTile(a, true)).join('')}</div>
-      <div class="home-spacer"></div>
-      <div class="home-search" aria-hidden="true">${svg('search', 13, 'stroke-width="2.4"')}<span>بحث</span></div>
+      <button type="button" class="home-dots" data-action="home-dots" aria-label="تبديل صفحة الشاشة الرئيسية"><i class="on"></i><i></i></button>
       <div class="home-dock">${appIcons.filter(a => a.where === 'dock').map(a => iconTile(a, false)).join('')}</div>`;
+    paintBattery();
+  }
+  function homePageIndex() {
+    const pager = $('#home-pager', homeEl);
+    return pager && pager.clientWidth ? Math.round(Math.abs(pager.scrollLeft) / pager.clientWidth) : 0;
+  }
+  function goHomePage(index, smooth = true) {
+    const pager = $('#home-pager', homeEl);
+    if (!pager) return;
+    const n = Math.max(0, Math.min(1, index));
+    pager.scrollTo({ left: -n * pager.clientWidth, behavior: smooth && !reducedMotion ? 'smooth' : 'auto' });
+    paintHomeDots(n);
+  }
+  function paintHomeDots(n = homePageIndex()) {
+    homeEl.querySelectorAll('.home-dots i').forEach((dot, i) => dot.classList.toggle('on', i === n));
   }
 
   /* ------------------------------------------------------------------ *
@@ -653,7 +732,214 @@
       </div>`;
   }
 
-  const renderers = { whatsapp: renderWhatsapp, chat: renderChat, bank: renderBank, alarm: renderAlarm, notes: renderNotes, note: renderNote, photos: renderPhotos, photo: renderPhoto, music: renderMusic, vault: renderVault, invite: renderInvite };
+  /* ---------------------------- الهاتف ---------------------------- */
+  let callsFilter = 'all';
+  const calls = [
+    { name: 'أم فهد ❤️', chat: 'wife', type: 'جوال', dir: 'in', missed: true, count: 3, when: minutesAgo(17) },
+    { name: 'الوالدة', avatar: 'و', color: '#e3c7a8', type: 'جوال', dir: 'in', missed: true, when: minutesAgo(48) },
+    { name: 'أبو سعد', chat: 'friend', type: 'واتساب صوتي', dir: 'out', when: minutesAgo(95) },
+    { name: 'الوالد', avatar: 'و', color: '#b9c4d6', type: 'جوال', dir: 'out', count: 2, when: daysAgo(1, 20, 10) },
+    { name: 'خالتي موضي 🌸', chat: 'aunt', type: 'واتساب صوتي', dir: 'in', when: daysAgo(1, 18, 2) },
+    { name: 'الوالدة', avatar: 'و', color: '#e3c7a8', type: 'جوال', dir: 'out', when: daysAgo(1, 13, 30) },
+    { name: 'نورة | الموارد البشرية', chat: 'hr', type: 'عمل', dir: 'in', when: daysAgo(3, 10, 25) },
+    { name: '+٤٤٧٩…', chat: 'scam', type: 'المملكة المتحدة', dir: 'in', missed: true, when: daysAgo(4, 15, 44) },
+    { name: 'بو عبدالله', chat: 'old', type: 'جوال', dir: 'out', when: daysAgo(9, 21, 5) },
+  ];
+  function callRows() {
+    return calls.filter(c => callsFilter === 'all' || c.missed).map(c => {
+      const who = chats.find(x => x.id === c.chat) || c;
+      const stamp = sameDay(c.when, NOW) ? clock(c.when) : relativeDay(c.when);
+      return `<div class="call-row"><span class="chat-avatar" style="background:${who.color}">${esc(who.avatar)}</span><span class="call-copy"><strong class="${c.missed ? 'is-missed' : ''}">${esc(c.name)}</strong><small>${svg(c.dir === 'out' ? 'arrowOut' : 'arrowIn', 13, 'stroke-width="2.4"')} ${esc(c.type)}${c.count ? ` (${ar(c.count)})` : ''}</small></span><time>${stamp}</time><span class="call-info" aria-hidden="true">i</span></div>`;
+    }).join('');
+  }
+  function renderPhone() {
+    const seg = (id, label) => `<button type="button" data-action="calls-filter" data-filter="${id}" class="${callsFilter === id ? 'on' : ''}" aria-pressed="${callsFilter === id}">${label}</button>`;
+    return `<header class="nav"><div class="nav-row glass-row"><span class="glass-pill">تعديل</span><div class="segmented">${seg('all', 'الكل')}${seg('missed', 'الفائتة')}</div><span class="glass-round">${svg('filter', 20, 'stroke-width="2.2"')}</span></div></header>
+      <div class="scroll"><h1 class="large-title">الحديثة</h1><div class="call-list" id="call-list">${callRows()}</div></div>
+      ${tabbar([['star', 'المفضلة'], ['clockIco', 'الحديثة', true], ['person', 'جهات الاتصال'], ['keypad', 'لوحة المفاتيح'], ['voicemail', 'البريد الصوتي']])}`;
+  }
+
+  /* ---------------------------- الإعدادات ---------------------------- */
+  let airplane = false;
+  const chev = () => `<span class="set-chev">${svg('chevronSmall', 18, 'stroke-width="2.4"')}</span>`;
+  function setRow(icon, color, label, value = '', control = '') {
+    return `<div class="set-row"><span class="set-ico" style="color:${color}">${svg(icon, 21, 'stroke-width="2"')}</span><span class="set-label">${label}</span>${value ? `<span class="set-value">${value}</span>` : ''}${control || chev()}</div>`;
+  }
+  function renderSettings() {
+    return `<header class="nav"><div class="nav-row"><span class="nav-text"></span><span class="nav-title">الإعدادات</span><span class="nav-text"></span></div></header>
+      <div class="scroll set-scroll">
+        <h1 class="large-title">الإعدادات</h1>
+        <div class="set-group">
+          <div class="set-profile"><span class="set-avatar">أ</span><span class="set-profile-copy"><strong>أبو فهد</strong><small>حساب Apple، iCloud+ والمزيد</small></span>${chev()}</div>
+          <div class="set-row set-plain"><span class="set-label">iCloud</span><span class="set-value" dir="ltr">abufahad@gmail.com</span>${chev()}</div>
+        </div>
+        <div class="set-group">
+          ${setRow('airplane', '#ff9f0a', 'نمط الطيران', '', `<button type="button" class="toggle-switch ${airplane ? 'on' : ''}" data-action="toggle-airplane" role="switch" aria-checked="${airplane}" aria-label="نمط الطيران"><span></span></button>`)}
+          ${setRow('wifi', '#0a84ff', 'Wi-Fi', 'بيت أبو فهد')}
+          ${setRow('bluetooth', '#0a84ff', 'Bluetooth', 'مشغّل')}
+          ${setRow('radio', '#30d158', 'الشبكة الخلوية')}
+          ${setRow('link', '#30d158', 'نقطة الاتصال الشخصية')}
+          ${setRow('batteryIco', '#30d158', 'البطارية', `<span class="js-battery">${ar(battery)}٪</span>`)}
+        </div>
+        <div class="set-group">
+          ${setRow('gear', '#aeaeb2', 'عام')}
+          ${setRow('access', '#0a84ff', 'تسهيلات الاستخدام')}
+          ${setRow('sun', '#0a84ff', 'شاشة العرض والإضاءة')}
+          ${setRow('photoLib', '#64d2ff', 'خلفية الشاشة')}
+          ${setRow('bell', '#ff453a', 'الإشعارات')}
+          ${setRow('speaker', '#ff375f', 'الأصوات والحس اللمسي')}
+          ${setRow('moon', '#5e5ce6', 'التركيز')}
+          ${setRow('hourglass', '#5e5ce6', 'مدة استخدام الجهاز')}
+        </div>
+      </div>
+      <div class="float-search" aria-hidden="true">${svg('search', 19, 'stroke-width="2.2"')}<span>بحث</span>${svg('mic', 19)}</div>`;
+  }
+
+  /* ---------------------------- التقويم ---------------------------- */
+  let hijriDayFmt = null, hijriMonthFmt = null;
+  try {
+    hijriDayFmt = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { day: 'numeric' });
+    hijriMonthFmt = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', { month: 'long' });
+  } catch { /* التقويم الهجري غير مدعوم في هذا المتصفح */ }
+  function hijri(date) {
+    if (!hijriDayFmt) return { text: '' };
+    const day = parseInt(hijriDayFmt.format(date), 10);
+    if (!day) return { text: '' };
+    return day === 1 ? { text: hijriMonthFmt.format(date), first: true } : { text: ar(day) };
+  }
+  function calendarEvents() {
+    const events = {};
+    const add = (date, color, text) => { (events[date.toDateString()] = events[date.toDateString()] || []).push({ color, text }); };
+    const next = dow => { const x = new Date(NOW); x.setDate(x.getDate() + ((dow - x.getDay() + 7) % 7)); return x; };
+    let expo = new Date(NOW.getFullYear(), 11, 1);
+    if (expo < daysAgo(1)) expo = new Date(NOW.getFullYear() + 1, 11, 1);
+    add(next(4), '#ff9f0a', 'عشا عند أهل أم فهد، الساعة ٩:٠٠ م');
+    add(next(6), '#0a84ff', 'غسيل السيارة');
+    add(expo, '#30d158', 'معرض INVESTVERSE، ريفر ووك، ٦:٠٠ – ١٠:٠٠ م');
+    add(lastFriday(), '#ff9f0a', 'كبسة الجمعة مع العائلة');
+    add(daysAgo(6), '#0a84ff', 'استلام سبائك الذهب');
+    add(daysAgo(17), '#0a84ff', 'اجتماع أولياء الأمور في مدرسة فهد');
+    return events;
+  }
+  function monthBlock(year, month, events, current) {
+    const first = new Date(year, month, 1);
+    const count = new Date(year, month + 1, 0).getDate();
+    let cells = '';
+    for (let d = 1; d <= count; d++) {
+      const date = new Date(year, month, d);
+      const list = events[date.toDateString()] || [];
+      const hj = hijri(date);
+      const cls = `cal-cell ${sameDay(date, NOW) ? 'is-today' : ''} ${date.getDay() >= 5 ? 'is-weekend' : ''}`;
+      const inner = `<span class="cal-n"><b>${ar(d)}</b><small class="${hj.first ? 'hj-first' : ''}">${hj.text}</small></span><span class="cal-dots">${list.map(e => `<i style="background:${e.color}"></i>`).join('')}</span>`;
+      const pos = d === 1 ? ` style="grid-column:${first.getDay() + 1}"` : '';
+      cells += list.length
+        ? `<button type="button" class="${cls}"${pos} data-action="cal-day" data-day="${date.toDateString()}" aria-label="${fullDate(date)}: ${esc(list.map(e => e.text).join('، '))}">${inner}</button>`
+        : `<span class="${cls}"${pos}>${inner}</span>`;
+    }
+    return `<section class="cal-month"><h2 class="cal-month-label ${current ? 'is-current' : ''}" style="grid-column:${first.getDay() + 1} / -1">${MONTHS[month]}</h2>${cells}</section>`;
+  }
+  function renderCalendar() {
+    const y = NOW.getFullYear(), m = NOW.getMonth();
+    const events = calendarEvents();
+    const nextMonth = new Date(y, m + 1, 1);
+    return `<header class="nav cal-nav"><div class="nav-row glass-row"><span class="glass-round">${svg('chevron', 22, 'stroke-width="2.4"')}</span><span class="cal-head"><b>${MONTHS[m]}</b> ${ar(y)}</span><span class="glass-round">${svg('menu', 20, 'stroke-width="2.2"')}</span></div><div class="cal-week" aria-hidden="true">${['ح', 'ن', 'ث', 'ر', 'خ', 'ج', 'س'].map((d, i) => `<span class="${i >= 5 ? 'is-weekend' : ''}">${d}</span>`).join('')}</div></header>
+      <div class="scroll cal-scroll">${monthBlock(y, m, events, true)}${monthBlock(nextMonth.getFullYear(), nextMonth.getMonth(), events, false)}</div>
+      <div class="cal-float" aria-hidden="true"><span class="cal-today"><small>${DAYS[NOW.getDay()]}</small><b>${ar(NOW.getDate())}</b></span><span class="cal-tools">${svg('calendar', 23)}${svg('inbox', 23)}${svg('search', 23)}</span><span class="glass-round glass-big">${svg('plus', 26)}</span></div>`;
+  }
+
+  /* ---------------------------- App Store ---------------------------- */
+  const storeApps = [
+    { name: 'Sahm - لتداول الأسهم', sub: 'Sahm Capital Financial Company', letter: 'S' },
+    { name: 'Al Rajhi Tadawul - Mobile', sub: 'Al Rajhi Capital', letter: 'R' },
+    { name: 'Saudi Exchange', sub: 'Saudi Stock Exchange (Tadawul)', letter: 'T' },
+    { name: 'Argaam ON - أرقام أون', sub: 'أخبار وتقارير سوق تداول الأسهم', letter: 'A' },
+    { name: 'TickerChart Live for iPhone', sub: 'المالية', letter: 'T' },
+  ];
+  function renderAppstore() {
+    return `<div class="scroll store-scroll">
+        <div class="store-head"><div><small>${fullDate(new Date())}</small><h1>اليوم</h1></div><span class="store-avatar">أ</span></div>
+        <article class="store-card store-feature">
+          <svg class="store-art" viewBox="0 0 340 250" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="store-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6CB579" stop-opacity=".55"/><stop offset="1" stop-color="#6CB579" stop-opacity="0"/></linearGradient></defs><path d="M0 190 40 168 78 182 120 132 158 150 205 92 246 112 290 52 340 70V250H0Z" fill="url(#store-fill)"/><path d="M0 190 40 168 78 182 120 132 158 150 205 92 246 112 290 52 340 70" fill="none" stroke="#8fe0a0" stroke-width="3.5" stroke-linejoin="round"/><circle cx="290" cy="52" r="7" fill="#fff"/></svg>
+          <div class="store-feature-copy"><small>حدث قريب</small><h2>سرّ الصفقة الرابحة ينكشف في المعرض</h2></div>
+          <div class="store-app-row">${miniIcon('vault')}<span class="store-app-copy"><strong>INVESTVERSE</strong><small>إثمار .. سهمك الرابح</small></span><button type="button" class="store-get" data-action="store-open">فتح</button></div>
+        </article>
+        <article class="store-card store-list">
+          <h2>تطبيقات الأسهم والاستثمار</h2>
+          ${storeApps.map(a => `<div class="store-app-row"><span class="store-tile">${a.letter}</span><span class="store-app-copy"><strong dir="auto">${esc(a.name)}</strong><small dir="auto">${esc(a.sub)}</small></span><button type="button" class="store-get" data-action="get-app" aria-label="الحصول على ${esc(a.name)}">الحصول على</button></div>`).join('')}
+        </article>
+      </div>
+      ${tabbar([['today', 'اليوم', true], ['rocket', 'الألعاب'], ['layers', 'التطبيقات'], ['joystick', 'Arcade'], ['search', 'بحث']])}`;
+  }
+
+  /* ---------------------------- Safari ---------------------------- */
+  function renderSafari() {
+    const favs = [['📈', 'أخبار السوق'], ['🥇', 'أسعار الذهب'], ['🧮', 'حاسبة الأرباح'], ['🏢', 'صناديق الريت'], ['⚽', 'نتائج المباريات'], ['⛅', 'طقس الرياض'], ['🚗', 'تجديد الاستمارة'], ['🍚', 'وصفات كبسة']];
+    const reading = [['الفرق بين الاستثمار والمضاربة', 'مقال، ٦ دقائق قراءة'], ['كيف تقرأ القوائم المالية بدون ما تكون محاسب', 'مقال، ٩ دقائق قراءة'], ['١٠ علامات تدل إن «التوصية المضمونة» احتيال', 'مقال، ٤ دقائق قراءة']];
+    const searches = ['هل السبائك أفضل من ذهب الزينة', 'وش يعني صندوق ريت', 'توزيعات أرباح الأسهم متى تنزل', 'كيف أعرف إن قروب التوصيات نصّاب', 'معرض INVESTVERSE'];
+    return `<div class="scroll safari-scroll">
+        <h2 class="saf-h">المفضلة</h2>
+        <div class="saf-favs">${favs.map(([emoji, label]) => `<span class="saf-fav"><i>${emoji}</i><small>${label}</small></span>`).join('')}</div>
+        <h2 class="saf-h">قائمة القراءة</h2>
+        <div class="saf-card">${reading.map(([title, meta]) => `<div class="saf-row"><span class="saf-row-ico">${svg('book', 20)}</span><span><strong>${title}</strong><small>${meta}</small></span></div>`).join('')}</div>
+        <h2 class="saf-h">عمليات البحث الأخيرة</h2>
+        <div class="saf-card">${searches.map(q => `<div class="saf-row saf-search">${svg('search', 17, 'stroke-width="2.2"')}<span>${q}</span></div>`).join('')}</div>
+      </div>
+      <div class="saf-bar" aria-hidden="true"><div class="saf-url">${svg('search', 17, 'stroke-width="2.2"')}<span>ابحث أو أدخل اسم موقع</span>${svg('mic', 18)}</div><div class="saf-tools">${svg('chevron', 24)}${svg('chevronSmall', 24)}${svg('share', 23)}${svg('book', 23)}${svg('tabsIco', 23)}</div></div>`;
+  }
+
+  /* ---------------------------- الكاميرا ---------------------------- */
+  function renderCamera() {
+    return `<div class="cam-top" aria-hidden="true"><span class="glass-round">${svg('bolt', 19)}</span><span class="glass-round">${svg('more', 21)}</span></div>
+      <div class="cam-view"><img src="${photo('riyadh-traffic.webp')}" alt="معاينة الكاميرا" draggable="false"/><div class="cam-zoom" aria-hidden="true"><span>٫٥</span><span class="on">١×</span><span>٢</span></div><div class="cam-flash" id="cam-flash"></div></div>
+      <div class="cam-modes" aria-hidden="true"><span>فيديو</span><span class="on">صورة</span><span>بورتريه</span></div>
+      <div class="cam-controls"><button type="button" class="cam-thumb" data-action="cam-thumb" aria-label="فتح الصور"><img src="${photo('investverse-gate.webp')}" alt="" draggable="false"/></button><button type="button" class="cam-shutter" data-action="shutter" aria-label="التقاط صورة"><span></span></button><span class="glass-round glass-big" aria-hidden="true">${svg('flip', 24)}</span></div>`;
+  }
+
+  /* ---------------------------- Gmail ---------------------------- */
+  let activeMail = 'dividend';
+  const mails = [
+    { id: 'dividend', from: 'بنك إثمار', avatar: 'ب', color: '#205D3B', subject: 'تم إيداع توزيعات أرباح', snippet: 'تم إيداع مبلغ 12,400 ر.س في حسابك الجاري', date: minutesAgo(26), unread: true,
+      body: ['عزيزنا أبو فهد،', 'تم إيداع مبلغ 12,400 ر.س في حسابك الجاري المنتهي بـ ٧٧١٠.', 'البيان: توزيعات أرباح أسهم.', 'هذه رسالة آلية، نرجو عدم الرد عليها.'] },
+    { id: 'reit', from: 'صندوق ريت الواحة', avatar: 'ص', color: '#3b6ea8', subject: 'إشعار توزيع نقدي دوري', snippet: 'تم إيداع توزيعات الصندوق: 8,750 ر.س', date: daysAgo(1, 10, 2), unread: true,
+      body: ['السادة مالكي الوحدات،', 'نفيدكم بإيداع التوزيع النقدي الدوري لوحداتكم في الصندوق.', 'المبلغ المودع: 8,750 ر.س', 'هذا دخل إيجاري من عقارات الصندوق، يوزَّع على مالكي الوحدات بحسب عدد وحداتهم.'] },
+    { id: 'ad-falcon', from: 'توصيات الصقر VIP', avatar: '🚀', color: '#5b3d8a', subject: '🚀 سهم بيطير ٣٠٠٪ هذا الأسبوع!!', snippet: 'آخر فرصة! اشترك بـ٩٩ ريال وتوصياتنا مضمونة ١٠٠٪', date: daysAgo(1, 22, 40), unread: true, ad: true,
+      body: ['لا تفوّت الفرصة!!', 'اشترك الآن في قروب VIP بـ٩٩ ريال فقط واحصل على توصيات مضمونة ١٠٠٪.', 'العدد محدود، حوّل الآن وأرسل الإيصال على الخاص.'] },
+    { id: 'expo', from: 'INVESTVERSE', avatar: 'I', color: '#205D3B', subject: 'دعوتك لمعرض INVESTVERSE', snippet: 'ننتظرك في المعرض، والتفاصيل داخل التطبيق', date: daysAgo(2, 12, 0), starred: true,
+      body: ['أهلًا أبو فهد،', 'تم تأكيد دعوتك لمعرض INVESTVERSE.', 'تفاصيل الموعد والمكان تلقاها داخل تطبيق INVESTVERSE في جوالك.', 'إثمار .. سهمك الرابح'] },
+    { id: 'weekly', from: 'نشرة السوق الأسبوعية', avatar: 'ن', color: '#8a5a2b', subject: 'ملخص الأسبوع: المؤشر والقطاعات وأبرز الإعلانات', snippet: 'حركة المؤشر، إعلانات التوزيعات القادمة، وكيف تقرأ القوائم', date: daysAgo(3, 7, 30),
+      body: ['أبرز ما في هذا العدد:', '• حركة المؤشر العام خلال الأسبوع', '• إعلانات توزيعات الأرباح القادمة', '• كيف تقرأ القوائم المالية في ٥ دقائق'] },
+    { id: 'fund', from: 'صندوق المدى الاستثماري', avatar: 'م', color: '#2f7d6b', subject: 'كشف العائد الشهري', snippet: 'العائد الموزّع لهذا الشهر: 15,200 ر.س', date: daysAgo(3, 9, 30),
+      body: ['عميلنا العزيز،', 'مرفق لكم كشف العائد الشهري لاستثماركم في الصندوق.', 'العائد الموزّع لهذا الشهر: 15,200 ر.س', 'الأداء السابق لا يضمن الأداء المستقبلي.'] },
+    { id: 'ad-fast', from: 'أرباح سريعة 💰', avatar: '💰', color: '#8a3d3d', subject: 'ضاعف راتبك وأنت في بيتك', snippet: 'بدون خبرة وبدون مخاطرة! سجّل الآن', date: daysAgo(4, 3, 12), ad: true,
+      body: ['بدون خبرة، بدون مخاطرة، أرباح يومية!', 'سجّل بياناتك ورقم بطاقتك وابدأ الربح من اليوم.'] },
+    { id: 'gold', from: 'سبائك الرياض', avatar: 'س', color: '#a8862b', subject: 'تأكيد طلب: سبائك ذهب', snippet: 'تم تنفيذ طلبك بقيمة 45,000 ر.س', date: daysAgo(6, 13, 44),
+      body: ['شكرًا لطلبك يا أبو فهد،', 'تم تنفيذ طلب شراء سبائك ذهب بقيمة 45,000 ر.س.', 'السبائك تُشترى للاستثمار، وما فيها مصنعية مثل ذهب الزينة.'] },
+    { id: 'issuer', from: 'إعلانات الشركات المدرجة', avatar: 'إ', color: '#4B4A4A', subject: 'إعلان توزيع أرباح نقدية على المساهمين', snippet: 'شركة الروابي القابضة تعلن تاريخ الأحقية وموعد التوزيع', date: daysAgo(7, 16, 0),
+      body: ['تعلن شركة الروابي القابضة عن توزيع أرباح نقدية على المساهمين عن النصف الثاني.', 'الأحقية للمساهمين المالكين للأسهم بنهاية تداول يوم الاستحقاق.', 'يتم الإيداع في الحسابات المرتبطة بالمحافظ الاستثمارية.'] },
+  ];
+  const mailStamp = date => (sameDay(date, NOW) ? clock(date) : dayMonth(date));
+  function renderGmail() {
+    const ads = mails.filter(m => m.ad);
+    return `<header class="nav mail-nav"><div class="mail-search">${svg('menu', 22, 'stroke-width="2"')}<span>البحث في البريد</span><span class="mail-me">أ</span></div></header>
+      <div class="scroll mail-scroll">
+        <p class="mail-label">البريد الوارد</p>
+        <div class="mail-row mail-bundle"><span class="mail-bundle-ico" style="color:#30d158">${svg('tag', 26)}</span><span class="mail-copy"><strong>كل العروض الترويجية</strong><small>${esc(ads[0].from)}: ${esc(ads[0].subject)}</small></span><span class="mail-chip" style="color:#30d158;background:rgba(48,209,88,.16)">${ar(ads.length)} جديدة</span></div>
+        ${mails.map(m => `<button type="button" class="mail-row ${m.unread ? 'is-unread' : ''}" data-action="open-mail" data-mail="${m.id}"><span class="mail-avatar" style="background:${m.color}">${esc(m.avatar)}</span><span class="mail-copy"><span class="mail-top"><strong>${esc(m.from)}</strong><time>${mailStamp(m.date)}</time>${m.unread ? '<i class="mail-dot"></i>' : ''}</span><b>${m.ad ? '<em class="mail-ad">إعلان</em> ' : ''}${esc(m.subject)}</b><small>${esc(m.snippet)}</small></span><span class="mail-star ${m.starred ? 'on' : ''}">${svg('star', 20, m.starred ? 'fill="currentColor"' : '')}</span></button>`).join('')}
+      </div>
+      <span class="mail-compose" aria-hidden="true">${svg('pencil', 20)} إنشاء</span>
+      <div class="mail-bar" aria-hidden="true"><span class="mail-tab on">${svg('mail', 24, 'fill="currentColor" stroke="#16233f"')}<i>${ar(mails.filter(m => m.unread).length)}</i></span><span class="mail-tab">${svg('video', 25)}</span></div>`;
+  }
+  function renderMailMsg() {
+    const m = mails.find(x => x.id === activeMail) || mails[0];
+    return `<header class="nav"><div class="nav-row">${backButton()}<span class="nav-actions">${svg('archive', 22)}${svg('trash', 22)}${svg('mail', 22)}</span></div></header>
+      <article class="scroll mail-open">
+        <h1>${esc(m.subject)} <span class="mail-inbox-chip">البريد الوارد</span></h1>
+        <div class="mail-sender"><span class="mail-avatar" style="background:${m.color}">${esc(m.avatar)}</span><span class="mail-copy"><span class="mail-top"><strong>${esc(m.from)}</strong><time>${mailStamp(m.date)}</time></span><small>إلى: أنا ${m.ad ? '· <em class="mail-ad">إعلان</em>' : ''}</small></span></div>
+        <div class="mail-body">${m.body.map(line => `<p>${esc(line)}</p>`).join('')}</div>
+      </article>`;
+  }
+
+  const renderers = { calendar: renderCalendar, settings: renderSettings, appstore: renderAppstore, gmail: renderGmail, mailmsg: renderMailMsg, phone: renderPhone, safari: renderSafari, camera: renderCamera, whatsapp: renderWhatsapp, chat: renderChat, bank: renderBank, alarm: renderAlarm, notes: renderNotes, note: renderNote, photos: renderPhotos, photo: renderPhoto, music: renderMusic, vault: renderVault, invite: renderInvite };
 
   /* ------------------------------------------------------------------ *
    * التنقل والحركة
@@ -719,7 +1005,10 @@
     homeEl.inert = true;
     showCoach();
     if (reducedMotion) return;
-    const [x, y] = originPoint(origin || homeEl.querySelector(`[data-app="${id}"]`));
+    const tile = homeEl.querySelector(`[data-app="${id}"]`);
+    const tilePage = tile?.closest('.home-page');
+    if (tilePage) goHomePage([...tilePage.parentNode.children].indexOf(tilePage), false);
+    const [x, y] = originPoint(origin && origin.isConnected ? origin : tile);
     win.style.transformOrigin = `${x}px ${y}px`;
     winAnim = win.animate([
       { transform: 'scale(.16)', opacity: 0, borderRadius: '90px' },
@@ -752,6 +1041,7 @@
     if (next === route && !opts.force) return;
     if (opts.chat) activeChat = opts.chat;
     if (opts.note) activeNote = opts.note;
+    if (opts.mail) activeMail = opts.mail;
     if (Number.isInteger(opts.photo)) activePhoto = opts.photo;
     rememberScroll();
     if (!opts.replace) stack.push(route);
@@ -835,6 +1125,42 @@
       case 'open-widget': openApp(button.dataset.target, button); break;
       case 'open-chat': navigate('chat', { chat: button.dataset.chat }); break;
       case 'open-note': navigate('note', { note: button.dataset.note }); break;
+      case 'open-mail': navigate('mailmsg', { mail: button.dataset.mail }); break;
+      case 'home-dots': goHomePage(homePageIndex() ? 0 : 1); break;
+      case 'calls-filter': {
+        callsFilter = button.dataset.filter;
+        win.querySelectorAll('.segmented button').forEach(b => { const on = b.dataset.filter === callsFilter; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+        $('#call-list', win).innerHTML = callRows();
+        break;
+      }
+      case 'toggle-airplane': {
+        airplane = !airplane;
+        button.classList.toggle('on', airplane);
+        button.setAttribute('aria-checked', airplane);
+        if (airplane) phone.dataset.air = 'on'; else delete phone.dataset.air;
+        buzz(6);
+        break;
+      }
+      case 'cal-day': {
+        const date = new Date(button.dataset.day);
+        notify((calendarEvents()[button.dataset.day] || []).map(e => e.text).join(' · '), fullDate(date), 'calendar');
+        break;
+      }
+      case 'get-app': {
+        if (button.classList.contains('is-done') || button.classList.contains('is-loading')) break;
+        button.classList.add('is-loading');
+        button.textContent = '';
+        setTimeout(() => { if (!button.isConnected) return; button.classList.remove('is-loading'); button.classList.add('is-done'); button.textContent = 'فتح'; }, 1600);
+        break;
+      }
+      case 'store-open': openApp('vault'); break;
+      case 'cam-thumb': openApp('photos'); break;
+      case 'shutter': {
+        const flash = $('#cam-flash', win);
+        if (flash) { flash.classList.remove('on'); void flash.offsetWidth; flash.classList.add('on'); }
+        buzz(10);
+        break;
+      }
       case 'open-photo': navigate('photo', { photo: Number(button.dataset.photo) }); break;
       case 'jump-photo': photoTrackGo(Number(button.dataset.jump), true); break;
       case 'toggle-alarm': {
@@ -875,6 +1201,15 @@
     if (target.classList.contains('scroll')) target.closest('.page')?.classList.toggle('scrolled', target.scrollTop > 34);
   }, true);
 
+  /* صفحات الشاشة الرئيسية: تحديث النقاط، والسحب بالماوس على الكمبيوتر */
+  homeEl.addEventListener('scroll', (event) => { if (event.target.id === 'home-pager') paintHomeDots(); }, true);
+  let pagerDrag = null;
+  homeEl.addEventListener('pointerdown', (event) => {
+    const pager = event.target.closest?.('#home-pager');
+    if (!pager || event.pointerType !== 'mouse') return;
+    pagerDrag = { x: event.clientX, start: pager.scrollLeft, page: homePageIndex(), k: scaleFactor(), dx: 0, moved: false, pager };
+  });
+
   /* سحب شاشة القفل للأعلى بالإصبع أو الماوس */
   let lockDrag = null;
   lockEl.addEventListener('pointerdown', (event) => {
@@ -882,6 +1217,14 @@
     lockDrag = { y: event.clientY, dy: 0, k: scaleFactor(), moved: false };
   });
   window.addEventListener('pointermove', (event) => {
+    if (pagerDrag) {
+      pagerDrag.dx = (event.clientX - pagerDrag.x) / pagerDrag.k;
+      if (Math.abs(pagerDrag.dx) > 6) {
+        pagerDrag.moved = true;
+        pagerDrag.pager.style.scrollSnapType = 'none';
+        pagerDrag.pager.scrollLeft = pagerDrag.start - pagerDrag.dx;
+      }
+    }
     if (lockDrag) {
       lockDrag.dy = Math.min(0, (event.clientY - lockDrag.y) / lockDrag.k);
       if (lockDrag.dy < -6) { lockDrag.moved = true; lockEl.style.transform = `translateY(${lockDrag.dy}px)`; }
@@ -898,6 +1241,15 @@
     }
   });
   function endDrags() {
+    if (pagerDrag) {
+      const d = pagerDrag; pagerDrag = null;
+      if (d.moved) {
+        suppressClick = true; setTimeout(() => { suppressClick = false; }, 60);
+        const target = Math.abs(d.dx) > 50 ? d.page + (d.dx > 0 ? 1 : -1) : d.page;
+        goHomePage(target);
+        setTimeout(() => { d.pager.style.scrollSnapType = ''; }, 420);
+      }
+    }
     if (lockDrag) {
       const d = lockDrag; lockDrag = null;
       if (d.moved) {
@@ -932,6 +1284,8 @@
       if (event.key === 'Backspace') { event.preventDefault(); handleCode(code.slice(0, -1)); }
     }
     if (route === 'lock' && (event.key === 'Enter' || event.key === 'ArrowUp') && !event.target.closest?.('button')) { event.preventDefault(); unlock(); }
+    if (route === 'home' && event.key === 'ArrowLeft') { event.preventDefault(); goHomePage(1); }
+    if (route === 'home' && event.key === 'ArrowRight') { event.preventDefault(); goHomePage(0); }
     if (route === 'photo' && event.key === 'ArrowLeft') { event.preventDefault(); stepPhoto(1); }
     if (route === 'photo' && event.key === 'ArrowRight') { event.preventDefault(); stepPhoto(-1); }
   });

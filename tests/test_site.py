@@ -79,7 +79,7 @@ class InteractiveBrowserChecks(unittest.TestCase):
             self.assertTrue(page.get_by_text('هذا الجوال مفقود').is_visible())
             page.locator('[data-action=unlock]').click()
             self.assertEqual(self.state(page, 'route'), 'home')
-            self.assertEqual(page.locator('.app-tile').count(), 7)
+            self.assertEqual(page.locator('.app-tile').count(), 14)
             # Seven story chats.
             page.locator('[data-app=whatsapp]').click()
             self.assertEqual(page.locator('.chat-preview').count(), 7)
@@ -140,6 +140,68 @@ class InteractiveBrowserChecks(unittest.TestCase):
         finally:
             page.close()
 
+    def test_home_pages_and_system_apps(self):
+        page = self.page()
+        errors = []
+        page.on('pageerror', lambda e: errors.append(str(e)))
+        home = lambda: page.locator('[data-action=home]').click()
+        try:
+            page.locator('[data-action=unlock]').click()
+            # Two home pages: system apps first, then WhatsApp, Gmail, the locked app and Music.
+            self.assertEqual(page.locator('.home-page').count(), 2)
+            first = page.locator('.home-page').nth(0)
+            second = page.locator('.home-page').nth(1)
+            for app in ('calendar', 'alarm', 'notes', 'appstore', 'settings'):
+                self.assertEqual(first.locator(f'[data-app={app}]').count(), 1, app)
+            for app in ('whatsapp', 'gmail', 'vault', 'music', 'bank'):
+                self.assertEqual(second.locator(f'[data-app={app}]').count(), 1, app)
+            for app in ('phone', 'safari', 'camera', 'photos'):
+                self.assertEqual(page.locator(f'.home-dock [data-app={app}]').count(), 1, app)
+            # Phone: recents with the family, and the missed-calls filter.
+            page.locator('[data-app=phone]').click()
+            calls = page.locator('#call-list').inner_text()
+            for name in ('أم فهد', 'الوالدة', 'الوالد', 'أبو سعد', 'خالتي موضي'):
+                self.assertIn(name, calls)
+            total = page.locator('.call-row').count()
+            page.locator('[data-filter=missed]').click()
+            self.assertLess(page.locator('.call-row').count(), total)
+            home()
+            # Settings shows the iCloud account and the live battery level.
+            page.locator('[data-app=settings]').click()
+            settings = page.locator('.set-scroll').inner_text()
+            self.assertIn('abufahad@gmail.com', settings)
+            self.assertIn('٢٥٪', settings)
+            home()
+            # Calendar renders this month and the next with today highlighted.
+            page.locator('[data-app=calendar]').click()
+            self.assertEqual(page.locator('.cal-month').count(), 2)
+            self.assertEqual(page.locator('.cal-cell.is-today').count(), 1)
+            home()
+            page.locator('[data-app=appstore]').click()
+            self.assertGreaterEqual(page.locator('.store-list .store-app-row').count(), 5)
+            home()
+            page.locator('[data-app=safari]').click()
+            self.assertTrue(page.get_by_text('قائمة القراءة').count())
+            home()
+            page.locator('[data-app=camera]').click()
+            page.locator('[data-action=shutter]').click()
+            home()
+            # Gmail: stock, dividend and ad emails; opening one shows its body.
+            page.locator('[data-app=gmail]').click()
+            self.assertGreaterEqual(page.locator('button.mail-row').count(), 8)
+            page.locator('[data-mail=dividend]').click()
+            self.assertEqual(self.state(page, 'route'), 'mailmsg')
+            self.assertIn('12,400', page.locator('.mail-open').inner_text())
+            page.locator('[data-action=back]').click()
+            self.assertEqual(self.state(page, 'route'), 'gmail')
+            home()
+            page.locator('[data-app=whatsapp]').click()
+            page.locator('[data-chat=wife]').click()
+            self.assertTrue(page.get_by_text('الله يكتب اللي فيه الخير').count())
+            self.assertFalse(errors, f'JS errors: {errors}')
+        finally:
+            page.close()
+
     def test_battery_drain_and_alerts(self):
         page = self.page()
         try:
@@ -181,7 +243,7 @@ class InteractiveBrowserChecks(unittest.TestCase):
         try:
             self.assertEqual(page.locator('.phone').bounding_box()['width'], 320)
             page.locator('[data-action=unlock]').click()
-            self.assertEqual(page.locator('.app-tile').count(), 7)
+            self.assertEqual(page.locator('.app-tile').count(), 14)
             page.locator('[data-app=vault]').click()
             self.assertEqual(page.locator('.keypad button').count(), 11)
             box = page.locator('.keypad').bounding_box()
