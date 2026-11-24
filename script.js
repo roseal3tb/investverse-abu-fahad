@@ -270,6 +270,8 @@
   function iconArt(id) {
     if (id === 'vault') return '<img src="assets/investverse-icon.png" alt="" draggable="false"/>';
     if (id === 'calendar') { const d = new Date(); return `<span class="cal-ico"><i>${DAYS[d.getDay()]}</i><b>${ar(d.getDate())}</b></span>`; }
+    const imageIcons = { whatsapp: 'assets/app-icons/whatsapp.webp', bank: 'assets/app-icons/bank.jpg', alarm: 'assets/app-icons/clock.webp', notes: 'assets/app-icons/notes.webp', photos: 'assets/app-icons/photos.jpg', music: 'assets/app-icons/music.jpg', appstore: 'assets/app-icons/appstore.webp', settings: 'assets/app-icons/settings.png', gmail: 'assets/app-icons/gmail.png', phone: 'assets/app-icons/phone.png', safari: 'assets/app-icons/safari.jpeg', camera: 'assets/app-icons/camera.webp' };
+    if (imageIcons[id]) return `<img class="app-icon-image" src="${imageIcons[id]}" alt="" draggable="false"/>`;
     return appArt[id] || '';
   }
 
