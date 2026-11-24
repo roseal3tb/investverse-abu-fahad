@@ -281,7 +281,7 @@
     { id: 'appstore', title: 'App Store', where: 'p1' },
     { id: 'settings', title: 'الإعدادات', where: 'p1' },
     { id: 'whatsapp', title: 'واتساب', where: 'p2', badge: 4 },
-    { id: 'gmail', title: 'Gmail', where: 'p2', badge: 3 },
+    { id: 'gmail', title: 'Gmail', where: 'p2', badge: () => mails.filter(m => m.unread).length },
     { id: 'vault', title: 'INVESTVERSE', where: 'p2', locked: true },
     { id: 'music', title: 'الأغاني', where: 'p2' },
     { id: 'bank', title: 'بنك إثمار', where: 'p2' },
@@ -344,10 +344,6 @@
     if (lockClock) lockClock.textContent = clock(now, false);
     const lockDate = $('.lock-date', lockEl);
     if (lockDate) lockDate.textContent = fullDate(now);
-    const s = now.getSeconds(), m = now.getMinutes() + s / 60, h = (now.getHours() % 12) + m / 60;
-    phone.style.setProperty('--hand-h', `${h * 30}deg`);
-    phone.style.setProperty('--hand-m', `${m * 6}deg`);
-    phone.style.setProperty('--hand-s', `${s * 6}deg`);
   }
   function notify(text, title = 'INVESTVERSE', app = 'vault') {
     clearTimeout(toastTimer);
@@ -459,8 +455,9 @@
     homeEl.classList.remove('home-behind');
     homeEl.classList.add('home-waiting');
     homeEl.inert = true;
-    renderLock(); renderHome();
     callsFilter = 'all'; airplane = false; delete phone.dataset.air;
+    mails.forEach(m => { m.unread = m.wasUnread; });
+    renderLock(); renderHome();
     startBattery();
     lockEl.hidden = false; lockEl.style.pointerEvents = '';
     setChrome();
@@ -473,8 +470,9 @@
   function iconTile(app, withLabel) {
     const locked = app.locked && !vaultOpen;
     const art = iconArt(app.id);
+    const badge = typeof app.badge === 'function' ? app.badge() : app.badge;
     return `<button class="app-tile" type="button" data-action="open-app" data-app="${app.id}" aria-label="${esc(app.title)}${locked ? '، مقفول' : ''}">
-      <span class="app-glyph icon-${app.id}">${art}${app.badge ? `<span class="app-badge">${ar(app.badge)}</span>` : ''}${locked ? `<span class="lock-mini">${svg('lock', 11, 'stroke-width="2.4"')}</span>` : ''}</span>
+      <span class="app-glyph icon-${app.id}">${art}${badge ? `<span class="app-badge">${ar(badge)}</span>` : ''}${locked ? `<span class="lock-mini">${svg('lock', 11, 'stroke-width="2.4"')}</span>` : ''}</span>
       ${withLabel ? `<span class="app-name" dir="auto">${esc(app.title)}</span>` : ''}</button>`;
   }
   function renderHome() {
@@ -917,17 +915,28 @@
     { id: 'issuer', from: 'إعلانات الشركات المدرجة', avatar: 'إ', color: '#4B4A4A', subject: 'إعلان توزيع أرباح نقدية على المساهمين', snippet: 'شركة الروابي القابضة تعلن تاريخ الأحقية وموعد التوزيع', date: daysAgo(7, 16, 0),
       body: ['تعلن شركة الروابي القابضة عن توزيع أرباح نقدية على المساهمين عن النصف الثاني.', 'الأحقية للمساهمين المالكين للأسهم بنهاية تداول يوم الاستحقاق.', 'يتم الإيداع في الحسابات المرتبطة بالمحافظ الاستثمارية.'] },
   ];
+  mails.forEach(m => { m.wasUnread = !!m.unread; });
   const mailStamp = date => (sameDay(date, NOW) ? clock(date) : dayMonth(date));
+  function markMailRead(id) {
+    const mail = mails.find(m => m.id === id);
+    if (!mail || !mail.unread) return;
+    mail.unread = false;
+    const left = mails.filter(m => m.unread).length;
+    const badge = homeEl.querySelector('[data-app="gmail"] .app-badge');
+    if (badge) { if (left) badge.textContent = ar(left); else badge.remove(); }
+  }
   function renderGmail() {
     const ads = mails.filter(m => m.ad);
+    const newAds = ads.filter(m => m.unread).length;
+    const unread = mails.filter(m => m.unread).length;
     return `<header class="nav mail-nav"><div class="mail-search">${svg('menu', 22, 'stroke-width="2"')}<span>البحث في البريد</span><span class="mail-me">أ</span></div></header>
       <div class="scroll mail-scroll">
         <p class="mail-label">البريد الوارد</p>
-        <div class="mail-row mail-bundle"><span class="mail-bundle-ico" style="color:#30d158">${svg('tag', 26)}</span><span class="mail-copy"><strong>كل العروض الترويجية</strong><small>${esc(ads[0].from)}: ${esc(ads[0].subject)}</small></span><span class="mail-chip" style="color:#30d158;background:rgba(48,209,88,.16)">${ar(ads.length)} جديدة</span></div>
+        <div class="mail-row mail-bundle"><span class="mail-bundle-ico" style="color:#30d158">${svg('tag', 26)}</span><span class="mail-copy"><strong>كل العروض الترويجية</strong><small>${esc(ads[0].from)}: ${esc(ads[0].subject)}</small></span>${newAds ? `<span class="mail-chip" style="color:#30d158;background:rgba(48,209,88,.16)">${ar(newAds)} جديدة</span>` : ''}</div>
         ${mails.map(m => `<button type="button" class="mail-row ${m.unread ? 'is-unread' : ''}" data-action="open-mail" data-mail="${m.id}"><span class="mail-avatar" style="background:${m.color}">${esc(m.avatar)}</span><span class="mail-copy"><span class="mail-top"><strong>${esc(m.from)}</strong><time>${mailStamp(m.date)}</time>${m.unread ? '<i class="mail-dot"></i>' : ''}</span><b>${m.ad ? '<em class="mail-ad">إعلان</em> ' : ''}${esc(m.subject)}</b><small>${esc(m.snippet)}</small></span><span class="mail-star ${m.starred ? 'on' : ''}">${svg('star', 20, m.starred ? 'fill="currentColor"' : '')}</span></button>`).join('')}
       </div>
       <span class="mail-compose" aria-hidden="true">${svg('pencil', 20)} إنشاء</span>
-      <div class="mail-bar" aria-hidden="true"><span class="mail-tab on">${svg('mail', 24, 'fill="currentColor" stroke="#16233f"')}<i>${ar(mails.filter(m => m.unread).length)}</i></span><span class="mail-tab">${svg('video', 25)}</span></div>`;
+      <div class="mail-bar" aria-hidden="true"><span class="mail-tab on">${svg('mail', 24, 'fill="currentColor" stroke="#16233f"')}${unread ? `<i>${ar(unread)}</i>` : ''}</span><span class="mail-tab">${svg('video', 25)}</span></div>`;
   }
   function renderMailMsg() {
     const m = mails.find(x => x.id === activeMail) || mails[0];
@@ -999,7 +1008,7 @@
     win.innerHTML = '';
     win.removeAttribute('style');
     win.hidden = false;
-    win.dataset.app = id;
+    win.dataset.current = id;
     mount('none');
     homeEl.classList.add('home-behind');
     homeEl.inert = true;
@@ -1090,6 +1099,7 @@
   }
   function renderHomeBadges() {
     homeEl.querySelectorAll('[data-app="vault"] .lock-mini').forEach(el => el.remove());
+    homeEl.querySelector('[data-app="vault"]')?.setAttribute('aria-label', 'INVESTVERSE');
   }
   function openOfficialLink(raw, kind) {
     if (typeof raw !== 'string' || !raw.trim()) {
@@ -1125,7 +1135,7 @@
       case 'open-widget': openApp(button.dataset.target, button); break;
       case 'open-chat': navigate('chat', { chat: button.dataset.chat }); break;
       case 'open-note': navigate('note', { note: button.dataset.note }); break;
-      case 'open-mail': navigate('mailmsg', { mail: button.dataset.mail }); break;
+      case 'open-mail': markMailRead(button.dataset.mail); navigate('mailmsg', { mail: button.dataset.mail }); break;
       case 'home-dots': goHomePage(homePageIndex() ? 0 : 1); break;
       case 'calls-filter': {
         callsFilter = button.dataset.filter;

@@ -77,6 +77,7 @@ class InteractiveBrowserChecks(unittest.TestCase):
             self.assertEqual(self.state(page, 'route'), 'lock')
             self.assertEqual(page.locator('.notif-card').count(), 3)
             self.assertTrue(page.get_by_text('هذا الجوال مفقود').is_visible())
+            self.assertEqual(page.locator('.sb-carrier').count(), 0)
             page.locator('[data-action=unlock]').click()
             self.assertEqual(self.state(page, 'route'), 'home')
             self.assertEqual(page.locator('.app-tile').count(), 14)
@@ -194,6 +195,9 @@ class InteractiveBrowserChecks(unittest.TestCase):
             self.assertIn('12,400', page.locator('.mail-open').inner_text())
             page.locator('[data-action=back]').click()
             self.assertEqual(self.state(page, 'route'), 'gmail')
+            # Opening an email marks it read: no blue dot, and the counters drop.
+            self.assertEqual(page.locator('[data-mail=dividend] .mail-dot').count(), 0)
+            self.assertEqual(page.locator('.mail-dot').count(), 2)
             home()
             page.locator('[data-app=whatsapp]').click()
             page.locator('[data-chat=wife]').click()
