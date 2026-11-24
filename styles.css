@@ -226,6 +226,7 @@ button.lock-round:active { transform: scale(1.12); }
 .icon-appstore { background: linear-gradient(180deg, #2aa7ff, #0a63f0); }
 .icon-phone { background: linear-gradient(180deg, #63e77a, #22b84e); }
 .icon-safari, .icon-gmail, .icon-calendar { background: #fff; overflow: hidden; }
+.app-glyph.icon-gmail { overflow: visible; }
 .cal-ico { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .04em; line-height: 1; color: #000; }
 .icon-calendar > .cal-ico { border-radius: inherit; background: linear-gradient(#fff, #fff) center / 80% 84% no-repeat, url('assets/app-icons/calendar.webp') center / 100% 100% no-repeat; }
 .cal-ico i { font-style: normal; font-size: .17em; font-weight: 600; color: var(--ios-red); }
