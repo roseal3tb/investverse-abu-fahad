@@ -294,7 +294,13 @@ class CommunityChecks(ChromiumCase):
 
     def run_until_announcement(self, page, slack=0):
         left = self.com(page, 'msUntilNext')
-        page.clock.run_for(max(0, int(left) + slack))
+        self.tick(page, max(0, int(left) + slack))
+
+    def tick(self, page, ms):
+        """يقدّم الساعة، ويقفل تنبيه البطارية لو طلع (عند ٢٠٪ و١٠٪) مثل ما يسوي المستخدم"""
+        page.clock.run_for(ms)
+        if page.locator('#alert').is_visible():
+            page.locator('[data-action=alert-close]').click()
 
     def com(self, page, key):
         return page.evaluate(f'INVESTVERSE_TEST.getCommunity().{key}')
@@ -312,6 +318,14 @@ class CommunityChecks(ChromiumCase):
     def test_history_structure_and_navigation(self):
         page = self.page()
         try:
+            # البطارية تنزل ١٪ كل ١٥ ثانية بالضبط
+            self.assertEqual(self.state(page, 'battery'), 25)
+            self.tick(page, 14800)
+            self.assertEqual(self.state(page, 'battery'), 25)
+            self.tick(page, 400)
+            self.assertEqual(self.state(page, 'battery'), 24)
+            self.tick(page, 15000)
+            self.assertEqual(self.state(page, 'battery'), 23)
             self.open_whatsapp(page)
             row = page.locator('.community-preview')
             self.assertIn('مبادرة إثمار 💸💚', row.inner_text())
@@ -371,7 +385,7 @@ class CommunityChecks(ChromiumCase):
         try:
             # Nothing is scheduled while the phone is still locked.
             self.assertFalse(self.com(page, 'armed'))
-            page.clock.run_for(60000)
+            self.tick(page, 60000)
             self.assertFalse(self.com(page, 'delivered'))
             page.locator('[data-action=unlock]').click(); self.settle(page, 700)
             self.assertEqual(self.com(page, 'announceDelay'), 5000)
@@ -379,7 +393,7 @@ class CommunityChecks(ChromiumCase):
             self.assertFalse(self.com(page, 'delivered'))
             self.assertTrue(page.locator('#toast').is_hidden())
             self.assertEqual(self.com(page, 'announcements'), 3)
-            page.clock.run_for(300)
+            self.tick(page, 300)
             self.assertTrue(self.com(page, 'delivered'))
             self.assertEqual(self.com(page, 'announcements'), 4)
             self.assertEqual(self.com(page, 'annUnread'), 1)
@@ -392,14 +406,14 @@ class CommunityChecks(ChromiumCase):
             self.assertEqual(page.locator('[data-app=whatsapp] .app-badge').inner_text(), '٥')
             # The group sequence must not start until the notification is tapped.
             self.assertFalse(self.com(page, 'tapped'))
-            page.clock.run_for(4000)
+            self.tick(page, 4000)
             self.assertEqual(self.com(page, 'mathmerina'), 28)
             banner.locator('[data-action=banner-tap]').click(); self.settle(page, 600)
             self.assertEqual(self.state(page, 'route'), 'community')
             self.assertTrue(self.com(page, 'tapped'))
             self.assertEqual(self.com(page, 'liveStep'), 0)
             # First live message arrives as a banner while the user is on the Community overview.
-            page.clock.run_for(2700); self.settle(page, 200)
+            self.tick(page, 2700); self.settle(page, 200)
             self.assertEqual(self.com(page, 'liveStep'), 1)
             self.assertEqual(self.com(page, 'mthUnread'), 1)
             self.assertIn('مجد العتيبي | نائبة لجنة الموارد البشرية', page.locator('#toast').inner_text())
@@ -410,7 +424,7 @@ class CommunityChecks(ChromiumCase):
             self.assertEqual(self.com(page, 'mthUnread'), 0)
             # While viewing the group, messages append without banners.
             for _ in range(14):
-                page.clock.run_for(2500); self.settle(page, 120)
+                self.tick(page, 2500); self.settle(page, 120)
                 self.assertTrue(page.locator('#toast').is_hidden() or 'مثمرينا' not in page.locator('#toast').inner_text())
             self.assertEqual(self.com(page, 'liveStep'), 10)
             self.assertEqual(self.com(page, 'mathmerina'), 38)
@@ -432,7 +446,7 @@ class CommunityChecks(ChromiumCase):
             self.assertEqual(link.get_attribute('target'), '_blank')
             self.assertEqual(link.inner_text(), QUIZ_URL)
             self.assertEqual(self.com(page, 'annUnread'), 0)
-            page.clock.run_for(60000)
+            self.tick(page, 60000)
             self.assertEqual(self.com(page, 'mathmerina'), 38)
             self.assertEqual(self.com(page, 'announcements'), 4)
             self.assertFalse(self.errors, self.errors)
@@ -465,7 +479,7 @@ class CommunityChecks(ChromiumCase):
         page = self.page()
         try:
             # Locked phone: the announcement waits; the 5 seconds start when the phone is unlocked.
-            page.clock.run_for(30000); self.settle(page, 200)
+            self.tick(page, 30000); self.settle(page, 200)
             self.assertFalse(self.com(page, 'delivered'))
             self.assertEqual(page.locator('#lock .notif-ethmar').count(), 0)
             page.locator('[data-action=unlock]').click(); self.settle(page, 700)
@@ -473,15 +487,15 @@ class CommunityChecks(ChromiumCase):
             page.locator('#toast [data-action=banner-tap]').click(); self.settle(page, 900)
             self.assertEqual(self.state(page, 'route'), 'community')
             self.assertTrue(self.com(page, 'tapped'))
-            page.clock.run_for(8000)
+            self.tick(page, 8000)
             self.assertGreaterEqual(self.com(page, 'liveStep'), 2)
             # Restart follows the existing reset: everything returns to the start; the timer re-arms on the next unlock.
-            page.clock.run_for(45000); self.settle(page, 400)  # التسلسل يخلص وآخر إشعار يختفي
+            self.tick(page, 45000); self.settle(page, 400)  # التسلسل يخلص وآخر إشعار يختفي
             self.assertEqual(self.com(page, 'liveStep'), 10)
             self.assertTrue(page.locator('#toast').is_hidden())
             page.locator('[data-action=home]').click(); self.settle(page, 600)
             page.locator('.app-tile[data-app=vault]').click(); self.settle(page, 600)
-            page.keyboard.type('4298'); page.clock.run_for(400); self.settle(page, 500)
+            page.keyboard.type('4298'); self.tick(page, 400); self.settle(page, 500)
             self.assertTrue(page.locator('.invite-poster').is_visible())
             page.locator('[data-action=restart]').click(); self.settle(page, 600)
             self.assertFalse(self.com(page, 'delivered'))

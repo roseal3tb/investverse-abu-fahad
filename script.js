@@ -370,11 +370,11 @@
   function hideCoach() { coachEl.hidden = true; }
 
   /* ------------------------------------------------------------------ *
-   * البطارية: تبدأ ٢٥٪ وتنزل ١٪ كل ٣٠ ثانية، وتنبّه عند ٢٠٪ و١٠٪
+   * البطارية: تبدأ ٢٥٪ وتنزل ١٪ كل ١٥ ثانية، وتنبّه عند ٢٠٪ و١٠٪
    * ------------------------------------------------------------------ */
   const BATTERY_START = 25;
   const BATTERY_FLOOR = 10;
-  const BATTERY_STEP_MS = 30000;
+  const BATTERY_STEP_MS = 15000;
   const BATTERY_ALERTS = [20, 10];
   function paintBattery() {
     batteryEl.querySelectorAll('.bat-num').forEach(el => { el.textContent = ar(battery); });
