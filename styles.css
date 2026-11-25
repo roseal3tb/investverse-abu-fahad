@@ -741,7 +741,7 @@ button.mail-row:active { background: #1f2024; }
 .cm-row.is-first { margin-top: 10px; }
 .cm-row.has-reactions { margin-bottom: 18px; }
 .cm-avatar { flex: none; width: 28px; height: 28px; border-radius: 50%; overflow: hidden; }
-.cm-avatar svg { display: block; width: 100%; height: 100%; }
+.cm-avatar svg, .cm-avatar img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .cm-avatar-gap { visibility: hidden; }
 .cm-bubble { position: relative; min-width: 0; max-width: calc(100% - 70px); padding: 6px 10px 7px; border-radius: 18px; font-size: 16.5px; line-height: 1.38; background: var(--bubble); }
 .cm-row.is-last .cm-bubble { border-bottom-right-radius: 0; }

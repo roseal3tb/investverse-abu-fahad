@@ -1,0 +1,11 @@
+{
+  "name": "investverse-abu-fahad-lost-phone",
+  "version": "1.0.0",
+  "description": "Standalone interactive INVESTVERSE campaign experience based on the Abu Fahad campaign PDF.",
+  "private": true,
+  "scripts": {
+    "dev": "python3 -m http.server 5173",
+    "start": "python3 -m http.server 5173",
+    "test": "python3 tests/test_site.py"
+  }
+}

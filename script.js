@@ -960,7 +960,7 @@
    * مجتمع واتساب: مبادرة إثمار 💸💚
    * مجتمع فيه مجموعتان: Announcements و«مثمرينا 💸💚».
    * - الرسائل السابقة موجودة من البداية ولا تطلق إشعارات.
-   * - إعلان روز (٨:٣٠ م) يوصل بعد ١٠ ثوانٍ من فتح الموقع، مرة وحدة.
+   * - إعلان روز (٨:٣٠ م) يوصل بعد ٥ ثوانٍ من فتح الموقع، مرة وحدة.
    * - تفاعل «مثمرينا» المباشر يبدأ مرة وحدة بعد الضغط على إشعار روز.
    * كل المحادثات خيالية ومكتوبة للمحاكاة.
    * ================================================================== */
@@ -968,15 +968,15 @@
   const ETHMAR_LOGO = 'assets/ethmar/ethmar-logo.webp';
   const POSTER_SRC = 'assets/investverse-poster.jpg';
   const QUIZ_URL = 'https://inverstverse.vercel.app/';
-  const ANNOUNCE_DELAY_MS = 10000;
+  const ANNOUNCE_DELAY_MS = 5000;
   const FIRST_LIVE_DELAY_MS = 2600;
 
   /* الأسماء الكاملة كما تظهر في واتساب، ولكل شخص لون ثابت */
   const ethmarMembers = {
-    raed: { name: 'رائد المطيري | رئيس مبادرة إثمار', color: '#4aa3ff' },
-    ghada: { name: 'غادة العتيبي | نائبة رئيس مبادرة إثمار', color: '#ff72b6' },
+    raed: { name: 'رائد المطيري | رئيس مبادرة إثمار', color: '#4aa3ff', avatar: 'assets/ethmar/avatar-raed.webp' },
+    ghada: { name: 'غادة العتيبي | نائبة رئيس مبادرة إثمار', color: '#ff72b6', avatar: 'assets/ethmar/avatar-ghada.webp' },
     dalia: { name: 'داليا الرشيد | نائبة رئيس مبادرة إثمار', color: '#c6d84a' },
-    rose: { name: 'روز العتيبي | نائبة اللجنة التقنية', color: '#8ee3ef' },
+    rose: { name: 'روز العتيبي | نائبة اللجنة التقنية', color: '#8ee3ef', avatar: 'assets/ethmar/avatar-rose.webp' },
     ghala: { name: 'غلا العتيبي | قائدة لجنة الموارد البشرية', color: '#ffc83d' },
     majd: { name: 'مجد العتيبي | نائبة لجنة الموارد البشرية', color: '#2fd3a5' },
     nouf: { name: 'نوف بن حثلين | قائدة اللجنة الإعلامية', color: '#ff9a5c' },
@@ -1121,7 +1121,7 @@
       const classes = ['cm-row', jumbo ? 'is-jumbo' : '', first ? 'is-first' : '', last ? 'is-last' : '', m.fresh ? 'is-new' : '', m.reactions && m.reactions.length ? 'has-reactions' : '', m.image ? 'has-image' : ''].join(' ');
       m.fresh = false;
       return `<div class="${classes}" data-mid="${m.id}">
-        ${last ? `<span class="cm-avatar">${DEFAULT_AVATAR}</span>` : '<span class="cm-avatar cm-avatar-gap"></span>'}
+        ${last ? `<span class="cm-avatar">${who.avatar ? `<img src="${who.avatar}" alt="" draggable="false"/>` : DEFAULT_AVATAR}</span>` : '<span class="cm-avatar cm-avatar-gap"></span>'}
         <div class="message-bubble cm-bubble">
           ${first ? `<span class="cm-author" style="color:${who.color}" dir="rtl">${esc(who.name)}</span>` : ''}
           ${quote}${image}${preview}

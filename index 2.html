@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="ضاع جوال أبو فهد، ومعه سر صفقته الرابحة. افتح الجوال، اكتشف الأرقام، واكشف دعوة INVESTVERSE." />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="جوال أبو فهد المفقود | INVESTVERSE" />
+    <meta property="og:description" content="جوال مفقود... وسر صفقة رابحة. تقدر تكتشف الرمز؟" />
+    <meta property="og:image" content="./assets/investverse-logo.png" />
+    <link rel="icon" type="image/png" href="./assets/investverse-icon.png" />
+    <title>جوال أبو فهد المفقود | INVESTVERSE</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="config.js" defer></script>
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <div class="desktop-tag" aria-hidden="true"><img src="assets/investverse-logo.png" alt="" /><span>جوال مفقود، وسرّ ما انكشف</span></div>
+
+    <div class="stage">
+      <div class="device" id="device">
+        <span class="hw hw-action" aria-hidden="true"></span>
+        <span class="hw hw-up" aria-hidden="true"></span>
+        <span class="hw hw-down" aria-hidden="true"></span>
+        <span class="hw hw-power" aria-hidden="true"></span>
+
+        <div class="phone" id="phone" data-bar="light" data-route="lock">
+          <div class="wallpaper" aria-hidden="true"></div>
+
+          <div id="home" class="home" aria-label="الشاشة الرئيسية" inert></div>
+          <main id="appwin" class="appwin" aria-label="التطبيق المفتوح" hidden></main>
+          <div id="lock" class="lock" aria-label="شاشة القفل"></div>
+
+          <div class="statusbar" dir="ltr" aria-label="شريط حالة الهاتف">
+            <span class="sb-left"><span id="status-time" class="sb-time">٩:٤١</span></span>
+            <span class="sb-right" aria-hidden="true">
+              <svg class="sb-air" viewBox="0 0 24 24"><path d="M10.6 3.6c0-.9.6-1.6 1.4-1.6s1.4.7 1.4 1.6V9l7.6 4.6v1.9l-7.6-2.3v4.6l2.4 1.8v1.6L12 20.3l-3.8.9v-1.6l2.4-1.8v-4.6L3 15.5v-1.9L10.6 9V3.6Z"/></svg>
+              <svg class="sb-signal" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx=".8"/><rect x="5" y="5.5" width="3" height="6.5" rx=".8"/><rect x="10" y="3" width="3" height="9" rx=".8"/><rect x="15" y="0" width="3" height="12" rx=".8"/></svg>
+              <svg class="sb-wifi" viewBox="0 0 16 12"><circle cx="8" cy="10.3" r="1.5"/><path d="M4 7.3a5.7 5.7 0 0 1 8 0M1.2 4.500a9.6 9.6 0 0 1 13.6 0" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+              <span class="sb-battery" id="battery" data-state="normal"><b class="bat-num">٢٥</b><i class="bat-fill"><b class="bat-num">٢٥</b></i></span>
+            </span>
+          </div>
+          <div class="island" aria-hidden="true"><span></span></div>
+
+          <div id="alert" class="alert-layer" hidden>
+            <div class="alert-box" role="alertdialog" aria-modal="true" aria-labelledby="alert-title" aria-describedby="alert-text">
+              <div class="alert-copy"><h2 id="alert-title">البطارية منخفضة</h2><p id="alert-text"></p></div>
+              <button type="button" data-action="battery-saver">نمط الطاقة المنخفضة</button>
+              <button type="button" class="alert-default" data-action="alert-close">إغلاق</button>
+            </div>
+          </div>
+          <div id="toast" class="banner" role="status" aria-live="polite" hidden></div>
+          <div id="coach" class="coach" hidden>اسحب الشريط للأعلى أو اضغطه للرجوع للشاشة الرئيسية</div>
+          <button id="home-bar" class="home-bar" type="button" data-action="home" aria-label="الشاشة الرئيسية"><span></span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="desktop-bottom" aria-hidden="true"><strong>INVESTVERSE</strong><span>إثمار .. سهمك الرابح</span></div>
+    <noscript>فعّل JavaScript في المتصفح لتجربة جوال أبو فهد.</noscript>
+  </body>
+</html>

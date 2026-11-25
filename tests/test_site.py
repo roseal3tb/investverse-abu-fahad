@@ -276,7 +276,7 @@ QUIZ_URL = 'https://inverstverse.vercel.app/'
 
 
 class CommunityChecks(ChromiumCase):
-    """WhatsApp Community: history, 10-second announcement, notification taps and the live group sequence.
+    """WhatsApp Community: history, 5-second announcement, notification taps and the live group sequence.
     The page clock is installed and paused, so every delay is advanced explicitly."""
 
     def page(self, width=390, height=844, mobile=True):
@@ -329,6 +329,10 @@ class CommunityChecks(ChromiumCase):
             self.assertIn('جاهزين تدخلون عالم الاستثمار من منظور مختلف؟', ann)
             self.assertNotIn(QUIZ_TEXT, ann)
             self.assertEqual(page.locator('#appwin .page:not(.leaving) .cm-row').count(), 3)
+            # Raed, Ghada and Rose show their WhatsApp photos; everyone else keeps the default avatar.
+            rows = page.locator('#appwin .page:not(.leaving) .cm-row')
+            for i in range(3):
+                self.assertEqual(rows.nth(i).locator('.cm-avatar img').count(), 1)
             self.assertIn('only community admins can send them', self.at(page, '.cm-readonly').inner_text())
             poster = self.at(page, '.cm-image img')
             poster.scroll_into_view_if_needed(); page.wait_for_function('document.querySelector("#appwin .page:not(.leaving) .cm-image img").complete')
@@ -349,6 +353,8 @@ class CommunityChecks(ChromiumCase):
             for name in ETHMAR_NAMES:
                 self.assertIn(name, mth if name.split(' |')[0] not in ('رائد المطيري', 'غادة العتيبي') else ann)
             self.assertEqual(self.com(page, 'mathmerina'), page.locator('#appwin .page:not(.leaving) .cm-row').count())
+            photos = page.locator('#appwin .page:not(.leaving) .cm-avatar img').count()
+            self.assertEqual(photos, 1)  # روز فقط في مثمرينا، والباقي الأفاتار الافتراضي
             firsts = page.locator('#appwin .page:not(.leaving) .cm-row.is-first').count()
             self.assertLess(firsts, self.com(page, 'mathmerina'))
             self.assertTrue(page.locator('#toast').is_hidden())
@@ -363,7 +369,7 @@ class CommunityChecks(ChromiumCase):
     def test_ten_second_announcement_and_live_sequence(self):
         page = self.page()
         try:
-            self.assertEqual(self.com(page, 'announceDelay'), 10000)
+            self.assertEqual(self.com(page, 'announceDelay'), 5000)
             page.locator('[data-action=unlock]').click(); self.settle(page, 700)
             self.run_until_announcement(page, -150)
             self.assertFalse(self.com(page, 'delivered'))
