@@ -210,9 +210,6 @@ button.lock-round:active { transform: scale(1.12); }
 .app-glyph { position: relative; width: var(--icon); height: var(--icon); font-size: var(--icon); border-radius: 22.6%; display: grid; place-items: center; box-shadow: 0 4px 10px rgba(0, 0, 0, .16); }
 .app-glyph > svg, .mini-icon > svg { border-radius: inherit; display: block; }
 .app-glyph > svg { width: 100%; height: 100%; }
-.app-glyph > .app-icon-image, .mini-icon > .app-icon-image { display: block; width: 100%; height: 100%; object-fit: contain; border-radius: inherit; pointer-events: none; }
-.icon-gmail > .app-icon-image { width: 76%; height: 76%; }
-.icon-whatsapp:has(> .app-icon-image), .icon-alarm:has(> .app-icon-image), .icon-notes:has(> .app-icon-image), .icon-appstore:has(> .app-icon-image), .icon-settings:has(> .app-icon-image), .icon-camera:has(> .app-icon-image) { background: transparent; }
 .icon-whatsapp { background: linear-gradient(180deg, #5df27a, #1caf4a); }
 .icon-bank { background: linear-gradient(160deg, #1a573f, #0a2a1e); }
 .icon-alarm { background: #101010; }
@@ -226,9 +223,7 @@ button.lock-round:active { transform: scale(1.12); }
 .icon-appstore { background: linear-gradient(180deg, #2aa7ff, #0a63f0); }
 .icon-phone { background: linear-gradient(180deg, #63e77a, #22b84e); }
 .icon-safari, .icon-gmail, .icon-calendar { background: #fff; overflow: hidden; }
-.app-glyph.icon-gmail { overflow: visible; }
 .cal-ico { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .04em; line-height: 1; color: #000; }
-.icon-calendar > .cal-ico { border-radius: inherit; background: linear-gradient(#fff, #fff) center / 80% 84% no-repeat, url('assets/app-icons/calendar.webp') center / 100% 100% no-repeat; }
 .cal-ico i { font-style: normal; font-size: .17em; font-weight: 600; color: var(--ios-red); }
 .cal-ico b { font-size: .5em; font-weight: 400; }
 .clock-hands line { transform-box: view-box; transform-origin: 30px 30px; }
