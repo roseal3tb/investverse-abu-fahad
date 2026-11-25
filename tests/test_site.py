@@ -369,8 +369,12 @@ class CommunityChecks(ChromiumCase):
     def test_ten_second_announcement_and_live_sequence(self):
         page = self.page()
         try:
-            self.assertEqual(self.com(page, 'announceDelay'), 5000)
+            # Nothing is scheduled while the phone is still locked.
+            self.assertFalse(self.com(page, 'armed'))
+            page.clock.run_for(60000)
+            self.assertFalse(self.com(page, 'delivered'))
             page.locator('[data-action=unlock]').click(); self.settle(page, 700)
+            self.assertEqual(self.com(page, 'announceDelay'), 5000)
             self.run_until_announcement(page, -150)
             self.assertFalse(self.com(page, 'delivered'))
             self.assertTrue(page.locator('#toast').is_hidden())
@@ -440,6 +444,7 @@ class CommunityChecks(ChromiumCase):
         try:
             self.open_whatsapp(page)
             self.run_until_announcement(page, 200)
+            self.assertTrue(self.com(page, 'delivered'))
             page.locator('.community-preview').click(); self.settle(page)
             self.at(page, '[data-group=ann]').click(); self.settle(page)
             requested = []
@@ -459,17 +464,18 @@ class CommunityChecks(ChromiumCase):
     def test_delivery_while_locked_and_restart(self):
         page = self.page()
         try:
+            # Locked phone: the announcement waits; the 5 seconds start when the phone is unlocked.
+            page.clock.run_for(30000); self.settle(page, 200)
+            self.assertFalse(self.com(page, 'delivered'))
+            self.assertEqual(page.locator('#lock .notif-ethmar').count(), 0)
+            page.locator('[data-action=unlock]').click(); self.settle(page, 700)
             self.run_until_announcement(page, 200); self.settle(page, 300)
-            self.assertTrue(page.locator('#toast').is_hidden())
-            card = page.locator('#lock .notif-ethmar')
-            self.assertEqual(card.count(), 1)
-            self.assertIn('روز العتيبي | نائبة اللجنة التقنية', card.inner_text())
-            card.click(); self.settle(page, 1200)
+            page.locator('#toast [data-action=banner-tap]').click(); self.settle(page, 900)
             self.assertEqual(self.state(page, 'route'), 'community')
             self.assertTrue(self.com(page, 'tapped'))
             page.clock.run_for(8000)
             self.assertGreaterEqual(self.com(page, 'liveStep'), 2)
-            # Restart follows the existing reset: everything returns to the start and the 10-second timer re-arms.
+            # Restart follows the existing reset: everything returns to the start; the timer re-arms on the next unlock.
             page.clock.run_for(45000); self.settle(page, 400)  # التسلسل يخلص وآخر إشعار يختفي
             self.assertEqual(self.com(page, 'liveStep'), 10)
             self.assertTrue(page.locator('#toast').is_hidden())
@@ -482,8 +488,8 @@ class CommunityChecks(ChromiumCase):
             self.assertFalse(self.com(page, 'tapped'))
             self.assertEqual(self.com(page, 'mathmerina'), 28)
             self.assertEqual(self.com(page, 'announcements'), 3)
-            self.assertTrue(self.com(page, 'timerPending'))
-            self.assertEqual(page.locator('#lock .notif-ethmar').count(), 0)
+            self.assertFalse(self.com(page, 'armed'))
+            self.assertFalse(self.com(page, 'timerPending'))
             self.assertFalse(self.errors, self.errors)
         finally:
             page.close()

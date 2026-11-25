@@ -439,6 +439,7 @@
   function unlock(after) {
     if (unlocked) return;
     unlocked = true;
+    armQuizAnnouncement();
     route = 'home'; stack = []; currentApp = null;
     setChrome();
     homeEl.inert = false;
@@ -960,7 +961,7 @@
    * مجتمع واتساب: مبادرة إثمار 💸💚
    * مجتمع فيه مجموعتان: Announcements و«مثمرينا 💸💚».
    * - الرسائل السابقة موجودة من البداية ولا تطلق إشعارات.
-   * - إعلان روز (٨:٣٠ م) يوصل بعد ٥ ثوانٍ من فتح الموقع، مرة وحدة.
+   * - إعلان روز (٨:٣٠ م) يوصل بعد ٥ ثوانٍ من فتح قفل الجوال، مرة وحدة.
    * - تفاعل «مثمرينا» المباشر يبدأ مرة وحدة بعد الضغط على إشعار روز.
    * كل المحادثات خيالية ومكتوبة للمحاكاة.
    * ================================================================== */
@@ -1053,7 +1054,7 @@
   let activeMedia = null;
   let bannerAction = null;
   /* حالة الإعلان والتسلسل. مؤقّت واحد فقط نشط في أي لحظة. */
-  const ethmar = { delivered: false, tapped: false, step: 0, timer: null, due: 0, run: null, startedAt: 0 };
+  const ethmar = { delivered: false, tapped: false, armed: false, step: 0, timer: null, due: 0, run: null, startedAt: 0 };
 
   const cloneMsg = (m, i, prefix) => ({ ...m, id: `${prefix}${i}`, reactions: (m.reactions || []).map(r => [...r]) });
   const cTime = ([h, m]) => clock(new Date(2026, 0, 1, h, m));
@@ -1073,13 +1074,18 @@
   function resetCommunity() {
     ethmarStopTimers();
     ethmar.run = null;
-    ethmar.delivered = false; ethmar.tapped = false; ethmar.step = 0;
+    ethmar.delivered = false; ethmar.tapped = false; ethmar.armed = false; ethmar.step = 0;
     communityGroups.ann.list = ANNOUNCEMENTS_TEMPLATE.map((m, i) => cloneMsg(m, i, 'a'));
     communityGroups.mth.list = MATHMERINA_TEMPLATE.map((m, i) => cloneMsg(m, i, 'm'));
     communityGroups.ann.unread = 0;
     communityGroups.mth.unread = 0;
     activeGroup = 'ann';
     activeMedia = null;
+  }
+  /* مؤقت إعلان روز يبدأ مرة وحدة لحظة فتح قفل الجوال */
+  function armQuizAnnouncement() {
+    if (ethmar.armed || ethmar.delivered) return;
+    ethmar.armed = true;
     ethmar.startedAt = Date.now();
     ethmarSchedule(ANNOUNCE_DELAY_MS, deliverQuizAnnouncement);
   }
@@ -1765,7 +1771,7 @@
       announcements: communityGroups.ann.list.length, mathmerina: communityGroups.mth.list.length,
       annUnread: communityGroups.ann.unread, mthUnread: communityGroups.mth.unread, whatsappBadge: whatsappUnread(),
       activeGroup, timerPending: !!ethmar.timer,
-      msUntilNext: ethmar.timer ? ethmar.due - Date.now() : null, announceDelay: ethmar.delivered ? null : ethmar.due - ethmar.startedAt,
+      msUntilNext: ethmar.timer ? ethmar.due - Date.now() : null, armed: ethmar.armed, announceDelay: ethmar.armed && !ethmar.delivered ? ethmar.due - ethmar.startedAt : null,
     }),
   });
 
