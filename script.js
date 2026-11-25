@@ -270,6 +270,8 @@
   function iconArt(id) {
     if (id === 'vault') return '<img src="assets/investverse-icon.png" alt="" draggable="false"/>';
     if (id === 'calendar') { const d = new Date(); return `<span class="cal-ico"><i>${DAYS[d.getDay()]}</i><b>${ar(d.getDate())}</b></span>`; }
+    const imageIcons = { whatsapp: 'assets/app-icons/whatsapp.webp', bank: 'assets/app-icons/bank.jpg', alarm: 'assets/app-icons/clock.webp', notes: 'assets/app-icons/notes.webp', photos: 'assets/app-icons/photos.jpg', music: 'assets/app-icons/music.jpg', appstore: 'assets/app-icons/appstore.webp', settings: 'assets/app-icons/settings.png', gmail: 'assets/app-icons/gmail.png', phone: 'assets/app-icons/phone.png', safari: 'assets/app-icons/safari.jpeg', camera: 'assets/app-icons/camera.webp' };
+    if (imageIcons[id]) return `<img class="app-icon-image" src="${imageIcons[id]}" alt="" draggable="false"/>`;
     return appArt[id] || '';
   }
 
@@ -280,7 +282,7 @@
     { id: 'notes', title: 'الملاحظات', where: 'p1' },
     { id: 'appstore', title: 'App Store', where: 'p1' },
     { id: 'settings', title: 'الإعدادات', where: 'p1' },
-    { id: 'whatsapp', title: 'واتساب', where: 'p2', badge: 4 },
+    { id: 'whatsapp', title: 'واتساب', where: 'p2', badge: () => whatsappUnread() },
     { id: 'gmail', title: 'Gmail', where: 'p2', badge: () => mails.filter(m => m.unread).length },
     { id: 'vault', title: 'INVESTVERSE', where: 'p2', locked: true },
     { id: 'music', title: 'الأغاني', where: 'p2' },
@@ -347,6 +349,8 @@
   }
   function notify(text, title = 'INVESTVERSE', app = 'vault') {
     clearTimeout(toastTimer);
+    bannerAction = null;
+    toastElement.classList.remove('banner-msg');
     toastElement.innerHTML = `${miniIcon(app)}<div><b>${esc(title)}</b><span>${esc(text)}</span></div>`;
     toastElement.hidden = false;
     toastElement.classList.remove('banner-exit');
@@ -457,6 +461,8 @@
     homeEl.inert = true;
     callsFilter = 'all'; airplane = false; delete phone.dataset.air;
     mails.forEach(m => { m.unread = m.wasUnread; });
+    hideBanner();
+    resetCommunity();
     renderLock(); renderHome();
     startBattery();
     lockEl.hidden = false; lockEl.style.pointerEvents = '';
@@ -547,7 +553,7 @@
       <div class="scroll">
         <h1 class="large-title">الدردشات</h1>
         <div class="search-field" aria-hidden="true">${svg('search', 16, 'stroke-width="2.2"')}<span>بحث</span></div>
-        <div class="chat-list">${chats.map(c => `<button type="button" data-action="open-chat" data-chat="${c.id}" class="chat-preview">${avatar(c)}<span class="chat-preview-copy"><span class="chat-line"><strong>${esc(c.name)}</strong><time class="${c.unread ? 'is-unread' : ''}">${chatStamp(c)}</time></span><span class="chat-line"><small>${c.mine ? '<i class="ticks">✓✓</i> ' : ''}${esc(c.preview)}</small>${c.unread ? `<b class="unread">${ar(c.unread)}</b>` : ''}</span></span></button>`).join('')}</div>
+        <div class="chat-list">${communityRowHTML()}${chats.map(c => `<button type="button" data-action="open-chat" data-chat="${c.id}" class="chat-preview">${avatar(c)}<span class="chat-preview-copy"><span class="chat-line"><strong>${esc(c.name)}</strong><time class="${c.unread ? 'is-unread' : ''}">${chatStamp(c)}</time></span><span class="chat-line"><small>${c.mine ? '<i class="ticks">✓✓</i> ' : ''}${esc(c.preview)}</small>${c.unread ? `<b class="unread">${ar(c.unread)}</b>` : ''}</span></span></button>`).join('')}</div>
         <p class="list-end-note">المحادثات شخصية خيالية لأغراض الحملة</p>
       </div>
       ${tabbar([['chat', 'الدردشات', true], ['phone', 'الاتصالات'], ['gear', 'الإعدادات']])}`;
@@ -720,7 +726,7 @@
     const hasRegister = typeof config.registrationUrl === 'string' && config.registrationUrl.trim();
     const hasMap = typeof config.mapUrl === 'string' && config.mapUrl.trim();
     return `<div class="scroll invite-content">
-        <img class="invite-poster" src="assets/investverse-poster.webp" alt="بوستر معرض INVESTVERSE: إثمار سهمك الرابح، مع محاور المعرض وموعده ومكانه" draggable="false"/>
+        <img class="invite-poster" src="assets/investverse-poster.jpg" alt="بوستر معرض INVESTVERSE: إثمار سهمك الرابح، مع محاور المعرض وموعده ومكانه" draggable="false"/>
         <div class="invite-foot">
           ${config.eventNotes ? `<p class="event-notes">${esc(config.eventNotes)}</p>` : ''}
           ${hasRegister || hasMap ? `<div class="invite-actions">${hasRegister ? '<button class="register-button" type="button" data-action="register">سجّل حضورك</button>' : ''}${hasMap ? `<button class="map-button" type="button" data-action="map">${svg('location', 18)} الخريطة</button>` : ''}</div>` : ''}
@@ -950,6 +956,437 @@
 
   const renderers = { calendar: renderCalendar, settings: renderSettings, appstore: renderAppstore, gmail: renderGmail, mailmsg: renderMailMsg, phone: renderPhone, safari: renderSafari, camera: renderCamera, whatsapp: renderWhatsapp, chat: renderChat, bank: renderBank, alarm: renderAlarm, notes: renderNotes, note: renderNote, photos: renderPhotos, photo: renderPhoto, music: renderMusic, vault: renderVault, invite: renderInvite };
 
+  /* ================================================================== *
+   * مجتمع واتساب: مبادرة إثمار 💸💚
+   * مجتمع فيه مجموعتان: Announcements و«مثمرينا 💸💚».
+   * - الرسائل السابقة موجودة من البداية ولا تطلق إشعارات.
+   * - إعلان روز (٨:٣٠ م) يوصل بعد ١٠ ثوانٍ من فتح الموقع، مرة وحدة.
+   * - تفاعل «مثمرينا» المباشر يبدأ مرة وحدة بعد الضغط على إشعار روز.
+   * كل المحادثات خيالية ومكتوبة للمحاكاة.
+   * ================================================================== */
+  const COMMUNITY_NAME = 'مبادرة إثمار 💸💚';
+  const ETHMAR_LOGO = 'assets/ethmar/ethmar-logo.webp';
+  const POSTER_SRC = 'assets/investverse-poster.jpg';
+  const QUIZ_URL = 'https://inverstverse.vercel.app/';
+  const ANNOUNCE_DELAY_MS = 10000;
+  const FIRST_LIVE_DELAY_MS = 2600;
+
+  /* الأسماء الكاملة كما تظهر في واتساب، ولكل شخص لون ثابت */
+  const ethmarMembers = {
+    raed: { name: 'رائد المطيري | رئيس مبادرة إثمار', color: '#4aa3ff' },
+    ghada: { name: 'غادة العتيبي | نائبة رئيس مبادرة إثمار', color: '#ff72b6' },
+    dalia: { name: 'داليا الرشيد | نائبة رئيس مبادرة إثمار', color: '#c6d84a' },
+    rose: { name: 'روز العتيبي | نائبة اللجنة التقنية', color: '#8ee3ef' },
+    ghala: { name: 'غلا العتيبي | قائدة لجنة الموارد البشرية', color: '#ffc83d' },
+    majd: { name: 'مجد العتيبي | نائبة لجنة الموارد البشرية', color: '#2fd3a5' },
+    nouf: { name: 'نوف بن حثلين | قائدة اللجنة الإعلامية', color: '#ff9a5c' },
+    aseel: { name: 'أسيل الصعب | نائبة اللجنة الإعلامية', color: '#9b8cff' },
+    sultan: { name: 'سلطان المتعب | قائد لجنة المحتوى المالي', color: '#f15c5c' },
+    waleed: { name: 'الوليد الرشيد | قائد لجنة العلاقات العامة', color: '#6fdc6f' },
+    anoud: { name: 'العنود القحطاني | قائدة لجنة إدارة المشاريع', color: '#d4a373' },
+  };
+
+  const ANNOUNCEMENTS_TEMPLATE = [
+    { from: 'raed', t: [19, 45], text: '8:00 🔥🔥🔥', reactions: [['🔥', 9], ['👀', 4], ['🤫', 2]] },
+    { from: 'ghada', t: [20, 0], image: POSTER_SRC, text: 'جاهزين تدخلون عالم الاستثمار من منظور مختلف؟ 👀\n\nيسرّنا في مبادرة إثمار الإعلان عن INVESTVERSE، تجربة تفاعلية نأخذكم فيها للتعرّف على عالم الاستثمار ومجالاته المختلفة.\n\nنشوفكم في INVESTVERSE 💚\n\nإثمار سهمك الرابح', reactions: [['💚', 14], ['🔥', 8], ['👀', 3]] },
+    { from: 'rose', t: [20, 15], text: '8:30 🔥🔥🔥', reactions: [['👀', 7], ['🤫', 3], ['🔥', 2]] },
+  ];
+  /* الإعلان الوحيد اللي يوصل بعد فتح الموقع. المعاينة من بيانات الموقع الفعلية (og:title و og:description). */
+  const QUIZ_ANNOUNCEMENT = {
+    from: 'rose', t: [20, 30], quiz: true,
+    text: `تبي تعرف أي نوع مستثمر أنت؟ هالاختبار بيقول لك 👇\n\n${QUIZ_URL}`,
+    preview: { title: 'INVESTVERSE – اكتشف شخصيتك الاستثمارية', description: '١٣ سؤال · ٣ دقائق. اكتشف أي نوع من المستثمرين أنت.', domain: 'inverstverse.vercel.app' },
+    reactions: [],
+  };
+  /* تفاعلات إعلان الاختبار تزيد مع وصول رسائل المجموعة */
+  const QUIZ_REACTION_STEPS = { 1: [['🔥', 1]], 3: [['🔥', 3], ['💚', 1]], 5: [['🔥', 5], ['💚', 2], ['👀', 1]], 8: [['🔥', 6], ['💚', 4], ['👀', 2], ['🤫', 1]] };
+
+  const MATHMERINA_TEMPLATE = [
+    { from: 'ghala', t: [19, 46], text: 'اوف وش عندهم اثمار 👀' },
+    { from: 'majd', t: [19, 46], text: 'وش السالفة' },
+    { from: 'nouf', t: [19, 47], text: 'حتى انتم ما تدرون؟ 😭' },
+    { from: 'sultan', t: [19, 48], text: 'ربع ساعة وتعرفون 🤫', reactions: [['👀', 3]] },
+    { from: 'ghala', t: [19, 48], text: 'يعني انت تدري؟', quote: { from: 'sultan', text: 'ربع ساعة وتعرفون 🤫' } },
+    { from: 'sultan', t: [19, 49], text: 'هههههههههههه' },
+    { from: 'sultan', t: [19, 49], text: '🤫🤫' },
+    { from: 'aseel', t: [19, 51], text: 'شكله فيه شي كبير 👀' },
+    { from: 'anoud', t: [19, 58], text: 'باقي دقيقتين' },
+    { from: 'majd', t: [20, 0], text: 'دقت ٨' },
+    { from: 'nouf', t: [20, 0], text: '👀👀👀' },
+    { from: 'nouf', t: [20, 1], text: 'التصميم!!! 😭💚', reactions: [['💚', 3]] },
+    { from: 'ghala', t: [20, 1], text: 'وااااو' },
+    { from: 'aseel', t: [20, 2], text: 'مره حلو ما شاء الله' },
+    { from: 'majd', t: [20, 2], text: '👏🏻👏🏻👏🏻' },
+    { from: 'waleed', t: [20, 3], text: 'يعطيكم العافية جميعا 💚', reactions: [['💚', 4]] },
+    { from: 'majd', t: [20, 4], text: 'متى الفعالية؟' },
+    { from: 'anoud', t: [20, 5], text: 'تحمستتت 🔥' },
+    { from: 'ghala', t: [20, 15], text: 'اوف وش عندهم التقنية بعد 😭' },
+    { from: 'majd', t: [20, 16], text: 'روز وش مسوين انتوا 👀' },
+    { from: 'nouf', t: [20, 16], text: 'ههههههههههههه اليوم كله تشويق' },
+    { from: 'aseel', t: [20, 17], text: 'توقعت خلاص خلصت المفاجآت' },
+    { from: 'anoud', t: [20, 19], text: 'طيب عطونا تلميح على الاقل' },
+    { from: 'rose', t: [20, 20], text: '🤫🤫', reactions: [['👀', 3], ['🔥', 1]] },
+    { from: 'sultan', t: [20, 22], text: 'شكلها مطولة السالفة 😂', reactions: [['😂', 2]] },
+    { from: 'ghala', t: [20, 27], text: 'باقي ثلاث دقايق' },
+    { from: 'majd', t: [20, 29], text: 'يلاااا' },
+    { from: 'nouf', t: [20, 29], text: '🔥🔥🔥' },
+  ];
+  /* تفاعل المجموعة المباشر على إعلان الاختبار فقط. delay = الانتظار قبل الرسالة بالملّي ثانية. */
+  const LIVE_SEQUENCE = [
+    { from: 'majd', t: [20, 30], text: 'نزلللل 🔥', delay: FIRST_LIVE_DELAY_MS },
+    { from: 'ghala', t: [20, 30], text: 'لحظة لحظة', delay: 3400 },
+    { from: 'nouf', t: [20, 30], text: 'اوه اختبار شخصية 👀', delay: 2300 },
+    { from: 'aseel', t: [20, 31], text: 'ههههههههههههه خل اشوف وش بيطلع لي', delay: 4800 },
+    { from: 'sultan', t: [20, 31], text: 'توني فتحته', delay: 3100 },
+    { from: 'waleed', t: [20, 31], text: '👏🏻👏🏻', delay: 2700 },
+    { from: 'ghala', t: [20, 32], text: 'حبيتتت 💚', delay: 5600 },
+    { from: 'majd', t: [20, 32], text: 'دقيقة بخلصه', delay: 2500 },
+    { from: 'anoud', t: [20, 33], text: 'هااا وش طلع لكم شخصيات', delay: 4200 },
+    { from: 'anoud', t: [20, 33], text: 'شاركونااااا 😂', delay: 2200 },
+  ];
+
+  const communityGroups = {
+    ann: { id: 'ann', title: 'Announcements', list: [], unread: 0 },
+    mth: { id: 'mth', title: 'مثمرينا 💸💚', list: [], unread: 0 },
+  };
+  let activeGroup = 'ann';
+  let activeMedia = null;
+  let bannerAction = null;
+  /* حالة الإعلان والتسلسل. مؤقّت واحد فقط نشط في أي لحظة. */
+  const ethmar = { delivered: false, tapped: false, step: 0, timer: null, due: 0, run: null, startedAt: 0 };
+
+  const cloneMsg = (m, i, prefix) => ({ ...m, id: `${prefix}${i}`, reactions: (m.reactions || []).map(r => [...r]) });
+  const cTime = ([h, m]) => clock(new Date(2026, 0, 1, h, m));
+  const communityUnread = () => communityGroups.ann.unread + communityGroups.mth.unread;
+  const whatsappUnread = () => chats.reduce((n, c) => n + (c.unread || 0), 0) + communityUnread();
+
+  function ethmarSchedule(ms, run) {
+    clearTimeout(ethmar.timer);
+    ethmar.due = Date.now() + ms;
+    ethmar.run = run;
+    ethmar.timer = setTimeout(() => { ethmar.timer = null; ethmar.run = null; run(); }, ms);
+  }
+  function ethmarStopTimers() {
+    clearTimeout(ethmar.timer);
+    ethmar.timer = null;
+  }
+  function resetCommunity() {
+    ethmarStopTimers();
+    ethmar.run = null;
+    ethmar.delivered = false; ethmar.tapped = false; ethmar.step = 0;
+    communityGroups.ann.list = ANNOUNCEMENTS_TEMPLATE.map((m, i) => cloneMsg(m, i, 'a'));
+    communityGroups.mth.list = MATHMERINA_TEMPLATE.map((m, i) => cloneMsg(m, i, 'm'));
+    communityGroups.ann.unread = 0;
+    communityGroups.mth.unread = 0;
+    activeGroup = 'ann';
+    activeMedia = null;
+    ethmar.startedAt = Date.now();
+    ethmarSchedule(ANNOUNCE_DELAY_MS, deliverQuizAnnouncement);
+  }
+
+  /* -------------------------- رسم الأجزاء -------------------------- */
+  const DEFAULT_AVATAR = '<svg viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" fill="#5b6266"/><circle cx="14" cy="11" r="4.8" fill="#c9cfd2"/><path d="M4.5 25.5c1.3-5 5-7.6 9.5-7.6s8.2 2.6 9.5 7.6Z" fill="#c9cfd2"/></svg>';
+  const ANNOUNCE_ICON = '<svg viewBox="0 0 56 56" aria-hidden="true"><rect width="56" height="56" fill="#103529"/><g fill="none" stroke="#d9fdd3" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 24.5h4.5l11-6.5v20l-11-6.5H16a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2Z" fill="#d9fdd3"/><path d="M20.5 31.5 22 39h3.6l-1.4-7.5"/><path d="M36 23.5a7 7 0 0 1 0 9M39.5 20a12 12 0 0 1 0 16"/></g></svg>';
+  function groupAvatar(id, size = 'md') {
+    if (id === 'community') return `<span class="c-ava c-ava-${size} c-ava-square"><img src="${ETHMAR_LOGO}" alt="" draggable="false"/></span>`;
+    if (id === 'ann') return `<span class="c-ava c-ava-${size}">${ANNOUNCE_ICON}</span>`;
+    return `<span class="c-ava c-ava-${size}"><img src="${ETHMAR_LOGO}" alt="" draggable="false"/></span>`;
+  }
+  function linkify(text) {
+    return esc(text).replace(/https?:\/\/[^\s<]+/g, url => `<a class="cm-link" href="${url}" target="_blank" rel="noopener noreferrer" dir="ltr">${url}</a>`);
+  }
+  function msgSummary(m) {
+    const who = ethmarMembers[m.from].name;
+    const body = m.image ? `📷 ${m.text.split('\n')[0]}` : m.text.replace(/\s+/g, ' ');
+    return `${who}: ${body}`;
+  }
+  function reactionsHTML(list) {
+    if (!list || !list.length) return '';
+    const total = list.reduce((n, r) => n + r[1], 0);
+    const shown = [...list].sort((a, b) => b[1] - a[1]).slice(0, 3).map(r => r[0]).join('');
+    return `<span class="cm-reactions" aria-label="تفاعلات: ${total}">${shown}${total > 1 ? `<b>${ar(total)}</b>` : ''}</span>`;
+  }
+  const JUMBO_EMOJI = /^(?:\p{Extended_Pictographic}(?:\p{Emoji_Modifier}|\uFE0F|\u200D\p{Extended_Pictographic})*){1,3}$/u;
+  function cMessagesHTML(group) {
+    const list = group.list;
+    const html = list.map((m, i) => {
+      const prev = list[i - 1], next = list[i + 1];
+      const first = !prev || prev.from !== m.from;
+      const last = !next || next.from !== m.from;
+      const who = ethmarMembers[m.from];
+      const quote = m.quote ? `<span class="cm-quote" style="--q:${ethmarMembers[m.quote.from].color}"><b>${esc(ethmarMembers[m.quote.from].name)}</b><span dir="auto">${esc(m.quote.text)}</span></span>` : '';
+      const image = m.image ? `<button type="button" class="cm-image" data-action="open-cmedia" data-mid="${m.id}" aria-label="عرض صورة الإعلان"><img src="${m.image}" alt="بوستر INVESTVERSE" width="904" height="1600" draggable="false"/></button>` : '';
+      const preview = m.preview ? `<a class="cm-preview" href="${QUIZ_URL}" target="_blank" rel="noopener noreferrer"><b dir="auto">${esc(m.preview.title)}</b><span dir="auto">${esc(m.preview.description)}</span><small dir="ltr">${esc(m.preview.domain)}</small></a>` : '';
+      const jumbo = !m.image && !m.quote && JUMBO_EMOJI.test(m.text);
+      const classes = ['cm-row', jumbo ? 'is-jumbo' : '', first ? 'is-first' : '', last ? 'is-last' : '', m.fresh ? 'is-new' : '', m.reactions && m.reactions.length ? 'has-reactions' : '', m.image ? 'has-image' : ''].join(' ');
+      m.fresh = false;
+      return `<div class="${classes}" data-mid="${m.id}">
+        ${last ? `<span class="cm-avatar">${DEFAULT_AVATAR}</span>` : '<span class="cm-avatar cm-avatar-gap"></span>'}
+        <div class="message-bubble cm-bubble">
+          ${first ? `<span class="cm-author" style="color:${who.color}" dir="rtl">${esc(who.name)}</span>` : ''}
+          ${quote}${image}${preview}
+          <span class="cm-text" dir="auto">${linkify(m.text)}</span><small class="bubble-time">${cTime(m.t)}</small>
+          ${last ? '<svg class="cm-tail" viewBox="0 0 9 14" aria-hidden="true"><path d="M0 0v14h8.5C5 13.2 1.6 10.4.9 0Z"/></svg>' : ''}
+          ${reactionsHTML(m.reactions)}
+        </div>
+      </div>`;
+    }).join('');
+    return `<div class="chat-day">اليوم</div>${html}`;
+  }
+  function latestOf(group) { return group.list[group.list.length - 1]; }
+  function communityLatest() {
+    const a = latestOf(communityGroups.ann), m = latestOf(communityGroups.mth);
+    const key = x => x.t[0] * 60 + x.t[1];
+    return key(a) > key(m) ? a : m;
+  }
+  /* سطر المجتمع في قائمة الدردشات */
+  function communityRowHTML() {
+    const latest = communityLatest();
+    const unread = communityUnread();
+    return `<button type="button" data-action="open-community" class="chat-preview community-preview">${groupAvatar('community', 'lg')}<span class="chat-preview-copy"><span class="chat-line"><strong>${esc(COMMUNITY_NAME)}</strong><time class="${unread ? 'is-unread' : ''}">${cTime(latest.t)}</time></span><span class="chat-line"><small>${esc(msgSummary(latest))}</small>${unread ? `<b class="unread">${ar(unread)}</b>` : ''}</span></span></button>`;
+  }
+  function communityGroupsHTML() {
+    return ['ann', 'mth'].map(id => {
+      const g = communityGroups[id], last = latestOf(g);
+      return `<button type="button" class="cg-row" data-action="open-cgroup" data-group="${id}">${groupAvatar(id, 'lg')}<span class="cg-copy"><span class="cg-top"><strong dir="auto">${esc(g.title)}</strong><time class="${g.unread ? 'is-unread' : ''}">${cTime(last.t)}</time></span><span class="cg-bottom"><small dir="rtl">${last.image ? `<i class="cg-cam">${svg('camera', 15)}</i>` : ''}${esc(msgSummary(last).replace('📷 ', ''))}</small>${g.unread ? `<b class="unread">${ar(g.unread)}</b>` : ''}</span></span></button>`;
+    }).join('');
+  }
+
+  /* -------------------------- الشاشات -------------------------- */
+  function renderCommunity() {
+    return `<header class="nav c-nav"><div class="nav-row glass-row"><button type="button" class="glass-round" data-action="back" aria-label="رجوع إلى الدردشات">${svg('chevron', 22, 'stroke-width="2.4"')}</button><span class="nav-title">${esc(COMMUNITY_NAME)}</span><span class="glass-round" aria-hidden="true">${svg('more', 22)}</span></div></header>
+      <div class="scroll c-scroll">
+        <div class="c-hero">${groupAvatar('community', 'xl')}<span class="c-hero-copy"><strong dir="auto">${esc(COMMUNITY_NAME)}</strong><small>مجتمع</small></span></div>
+        <h2 class="c-section">مجموعاتك</h2>
+        <p class="c-hint">تُعرض معًا في قائمة الدردشات. <span>تغيير</span></p>
+        <div class="c-groups" id="c-groups">${communityGroupsHTML()}</div>
+        <p class="c-empty">ستظهر هنا المجموعات الأخرى المضافة إلى المجتمع.<br/>ويمكن لأعضاء المجتمع الانضمام إلى هذه المجموعات.</p>
+      </div>
+      <div class="c-add" aria-hidden="true"><span>${svg('plus', 22, 'stroke-width="2.4"')} إضافة مجموعة</span></div>`;
+  }
+  function renderCommunityChat() {
+    const g = communityGroups[activeGroup];
+    const isAnn = g.id === 'ann';
+    const title = isAnn ? COMMUNITY_NAME : g.title;
+    const sub = isAnn ? 'Announcements' : `${Object.values(ethmarMembers).map(x => x.name).join('، ')}، أنت`;
+    return `<header class="nav chat-nav cm-nav"><div class="nav-row">${backButton()}<div class="chat-head">${groupAvatar(isAnn ? 'ann' : 'mth', 'sm')}<span class="chat-head-copy"><strong dir="auto">${esc(title)}</strong><small dir="auto">${esc(sub)}</small></span></div><button type="button" class="cm-community-btn" data-action="open-community" aria-label="فتح المجتمع">${groupAvatar('community', 'xs')}<i>${svg('chevronSmall', 11, 'stroke-width="3"')}</i></button></div></header>
+      <div class="scroll chat-background cm-scroll" data-group="${g.id}"><div class="cm-column" data-group="${g.id}">${cMessagesHTML(g)}</div></div>
+      <button type="button" class="cm-jump" data-action="cm-jump" aria-label="الانتقال لآخر رسالة" hidden>${svg('chevron', 20, 'stroke-width="2.4" style="transform:rotate(90deg)"')}<b></b></button>
+      ${isAnn
+        ? '<div class="cm-readonly" dir="ltr">You can reply to announcements, but only <span>community admins</span> can send them.</div>'
+        : `<div class="chat-compose" aria-hidden="true">${svg('plus', 26)}<span class="compose-field"></span>${svg('camera', 24)}${svg('mic', 23)}</div>`}`;
+  }
+  function renderCommunityMedia() {
+    const m = activeMedia || communityGroups.ann.list.find(x => x.image);
+    const who = ethmarMembers[m.from];
+    return `<header class="nav cmv-nav"><div class="nav-row">${backButton()}<span class="cmv-head"><strong dir="rtl">${esc(who.name)}</strong><small>اليوم ${cTime(m.t)}</small></span><span class="nav-actions">${svg('share', 22)}</span></div></header>
+      <div class="cmv-stage"><img src="${m.image}" alt="بوستر INVESTVERSE" draggable="false"/></div>
+      <div class="cmv-caption" dir="auto">${esc(m.text.split('\n')[0])}</div>`;
+  }
+  Object.assign(renderers, { community: renderCommunity, cchat: renderCommunityChat, cmedia: renderCommunityMedia });
+  Object.assign(parentRoute, { community: 'whatsapp', cchat: 'community', cmedia: 'cchat' });
+
+  /* -------------------------- تحديث الواجهات الحية -------------------------- */
+  function isViewingGroup(id) {
+    return unlocked && !win.hidden && route === 'cchat' && activeGroup === id;
+  }
+  function updateWhatsAppBadge() {
+    const glyph = homeEl.querySelector('[data-app="whatsapp"] .app-glyph');
+    if (!glyph) return;
+    const n = whatsappUnread();
+    let badge = glyph.querySelector('.app-badge');
+    if (!n) { badge?.remove(); return; }
+    if (!badge) { badge = document.createElement('span'); badge.className = 'app-badge'; glyph.appendChild(badge); }
+    badge.textContent = ar(n);
+  }
+  function currentPage() { return win.querySelector('.page:not(.leaving)'); }
+  function refreshCommunityViews(changedGroup) {
+    updateWhatsAppBadge();
+    const page = currentPage();
+    if (!page || win.hidden) return;
+    if (route === 'whatsapp') {
+      const row = page.querySelector('.community-preview');
+      if (row) row.outerHTML = communityRowHTML();
+    } else if (route === 'community') {
+      const list = page.querySelector('#c-groups');
+      if (list) list.innerHTML = communityGroupsHTML();
+    } else if (route === 'cchat' && changedGroup === activeGroup) {
+      const sc = page.querySelector('.cm-scroll');
+      const col = page.querySelector('.cm-column');
+      if (!sc || !col) return;
+      const nearBottom = sc.scrollHeight - sc.scrollTop - sc.clientHeight < 120;
+      const keep = sc.scrollTop;
+      col.innerHTML = cMessagesHTML(communityGroups[activeGroup]);
+      if (nearBottom) sc.scrollTop = sc.scrollHeight; // الفقاعة الجديدة تتحرك بنفسها، والتمرير فوري عشان ما يضيع مع الرسائل المتتالية
+      else { sc.scrollTop = keep; showJump(page, true); }
+    }
+  }
+  function showJump(page, hasNew) {
+    const btn = page.querySelector('.cm-jump');
+    if (!btn) return;
+    btn.hidden = false;
+    if (hasNew) btn.querySelector('b').textContent = '•';
+  }
+  function updateJump(sc) {
+    const page = sc.closest('.page');
+    const btn = page?.querySelector('.cm-jump');
+    if (!btn) return;
+    const away = sc.scrollHeight - sc.scrollTop - sc.clientHeight > 260;
+    btn.hidden = !away;
+    if (!away) btn.querySelector('b').textContent = '';
+  }
+  function markGroupRead(id) {
+    if (!communityGroups[id].unread) return;
+    communityGroups[id].unread = 0;
+    updateWhatsAppBadge();
+  }
+
+  /* -------------------------- الإشعارات -------------------------- */
+  function notificationAvatar(id) {
+    return `<span class="n-ava">${groupAvatar(id, 'notif')}${miniIcon('whatsapp')}</span>`;
+  }
+  /* إشعار واتساب منسدل بنفس عنصر الإشعار ونفس حركته */
+  function notifyMessage({ avatar, title, sender, text, onTap, duration = 5000 }) {
+    clearTimeout(toastTimer);
+    bannerAction = onTap || null;
+    toastElement.innerHTML = `<button type="button" class="banner-hit" data-action="banner-tap" aria-label="${esc(`${title}، ${sender}: ${text}`)}">${notificationAvatar(avatar)}<span class="banner-copy"><span class="banner-top"><b dir="auto">${esc(title)}</b><time>الآن</time></span><span class="banner-sender" dir="rtl">${esc(sender)}</span><span class="banner-text" dir="auto">${esc(text)}</span></span></button>`;
+    toastElement.hidden = false;
+    toastElement.classList.add('banner-msg');
+    toastElement.classList.remove('banner-exit');
+    void toastElement.offsetWidth;
+    toastElement.classList.add('banner-in');
+    buzz([10, 50, 10]);
+    toastTimer = setTimeout(hideBanner, duration);
+  }
+  function hideBanner() {
+    clearTimeout(toastTimer);
+    if (toastElement.hidden) return;
+    toastElement.classList.add('banner-exit');
+    toastTimer = setTimeout(() => { toastElement.hidden = true; toastElement.classList.remove('banner-in', 'banner-exit', 'banner-msg'); bannerAction = null; }, 260);
+  }
+  /* بطاقة على شاشة القفل، مثل إشعارات iOS اللي توصل والجوال مقفول */
+  function addLockNotification({ avatar, title, sender, text, target }) {
+    const stack = $('.notification-stack', lockEl);
+    if (!stack) return;
+    stack.querySelector(`[data-target="${target}"]`)?.remove();
+    const card = document.createElement('button');
+    card.type = 'button';
+    card.className = 'notif-card notif-ethmar is-arriving';
+    card.dataset.action = 'notif-ethmar';
+    card.dataset.target = target;
+    card.innerHTML = `${notificationAvatar(avatar)}<span class="notif-copy"><b dir="auto">${esc(title)}</b><em dir="rtl">${esc(sender)}</em><span dir="auto">${esc(text)}</span></span><time>الآن</time>`;
+    stack.prepend(card);
+    buzz([10, 50, 10]);
+  }
+
+  /* -------------------------- الإعلان والتسلسل -------------------------- */
+  function deliverQuizAnnouncement() {
+    if (ethmar.delivered) return;
+    ethmar.delivered = true;
+    const msg = cloneMsg(QUIZ_ANNOUNCEMENT, communityGroups.ann.list.length, 'a');
+    msg.fresh = true;
+    communityGroups.ann.list.push(msg);
+    const shortText = QUIZ_ANNOUNCEMENT.text.split('\n')[0];
+    const sender = ethmarMembers.rose.name;
+    if (isViewingGroup('ann')) {
+      // المستخدم داخل Announcements أصلًا: تنضاف الرسالة قدامه بدون إشعار، وتعتبر شافها
+      refreshCommunityViews('ann');
+      startLiveSequence();
+      return;
+    }
+    communityGroups.ann.unread += 1;
+    refreshCommunityViews('ann');
+    if (!unlocked) addLockNotification({ avatar: 'community', title: COMMUNITY_NAME, sender, text: shortText, target: 'community' });
+    else notifyMessage({ avatar: 'community', title: COMMUNITY_NAME, sender, text: shortText, onTap: openFromQuizNotification, duration: 8000 });
+  }
+  function openFromQuizNotification() {
+    openWhatsAppAt('community');
+    startLiveSequence();
+  }
+  function startLiveSequence() {
+    if (ethmar.tapped) return;
+    ethmar.tapped = true;
+    ethmar.step = 0;
+    scheduleNextLive();
+  }
+  function scheduleNextLive() {
+    const next = LIVE_SEQUENCE[ethmar.step];
+    if (!next) return;
+    ethmarSchedule(next.delay, deliverLiveMessage);
+  }
+  function deliverLiveMessage() {
+    const src = LIVE_SEQUENCE[ethmar.step];
+    if (!src) return;
+    ethmar.step += 1;
+    const g = communityGroups.mth;
+    const msg = cloneMsg(src, g.list.length, 'm');
+    delete msg.delay;
+    msg.fresh = true;
+    g.list.push(msg);
+    const reactions = QUIZ_REACTION_STEPS[ethmar.step];
+    if (reactions) {
+      const quiz = communityGroups.ann.list.find(m => m.quiz);
+      if (quiz) { quiz.reactions = reactions.map(r => [...r]); refreshCommunityViews('ann'); }
+    }
+    if (isViewingGroup('mth')) {
+      refreshCommunityViews('mth');
+    } else {
+      g.unread += 1;
+      refreshCommunityViews('mth');
+      if (unlocked) notifyMessage({ avatar: 'mth', title: g.title, sender: ethmarMembers[src.from].name, text: src.text, onTap: () => openWhatsAppAt('mth'), duration: 4200 });
+      else addLockNotification({ avatar: 'mth', title: g.title, sender: ethmarMembers[src.from].name, text: src.text, target: 'mth' });
+    }
+    scheduleNextLive();
+  }
+
+  /* يفتح واتساب مباشرة على المجتمع أو على مجموعة، من أي مكان في الجوال */
+  function openWhatsAppAt(target) {
+    if (!unlocked) { unlock(() => { if (route === 'home') openWhatsAppAt(target); }); return; }
+    hideBanner();
+    const want = target === 'community' ? 'community' : 'cchat';
+    if (want === 'cchat') { activeGroup = target; markGroupRead(target); }
+    if (currentApp !== 'whatsapp' || route === 'home' || win.hidden) {
+      openApp('whatsapp');
+      stack = want === 'community' ? ['whatsapp'] : ['whatsapp', 'community'];
+      route = want;
+      mount('none');
+      return;
+    }
+    if (route === want && (want === 'community' || win.querySelector(`.page:not(.leaving) .cm-column[data-group="${target}"]`))) return;
+    rememberScroll();
+    stack = want === 'community' ? ['whatsapp'] : ['whatsapp', 'community'];
+    route = want;
+    mount('push');
+  }
+
+  /* سحب الإشعار للأعلى يخفيه مثل الآيفون */
+  let bannerDrag = null;
+  toastElement.addEventListener('pointerdown', (event) => { bannerDrag = { y: event.clientY, k: scaleFactor() }; });
+  toastElement.addEventListener('pointermove', (event) => {
+    if (!bannerDrag) return;
+    const dy = Math.min(0, (event.clientY - bannerDrag.y) / bannerDrag.k);
+    if (dy < -4) { bannerDrag.moved = true; toastElement.style.transform = `translateY(${dy}px)`; }
+  });
+  const endBannerDrag = (event) => {
+    if (!bannerDrag) return;
+    const dy = (event.clientY - bannerDrag.y) / bannerDrag.k, moved = bannerDrag.moved;
+    bannerDrag = null;
+    toastElement.style.transform = '';
+    if (!moved) return;
+    suppressClick = true; setTimeout(() => { suppressClick = false; }, 60);
+    if (dy < -24) hideBanner();
+  };
+  toastElement.addEventListener('pointerup', endBannerDrag);
+  toastElement.addEventListener('pointercancel', endBannerDrag);
+  toastElement.addEventListener('pointerenter', () => { if (bannerAction) clearTimeout(toastTimer); });
+  toastElement.addEventListener('pointerleave', () => { if (bannerAction && !toastElement.hidden) toastTimer = setTimeout(hideBanner, 2000); });
+  /* ما يبقى أي مؤقت شغّال لما تُغلق الصفحة، ويرجع لما ترجع لها من ذاكرة المتصفح */
+  window.addEventListener('pagehide', () => { ethmarStopTimers(); });
+  window.addEventListener('pageshow', (event) => {
+    if (!event.persisted || !ethmar.run || ethmar.timer) return;
+    ethmarSchedule(Math.max(0, ethmar.due - Date.now()), ethmar.run);
+  });
+
   /* ------------------------------------------------------------------ *
    * التنقل والحركة
    * ------------------------------------------------------------------ */
@@ -969,7 +1406,7 @@
     setChrome();
 
     const sc = page.querySelector('.scroll');
-    if (route === 'chat' && sc) sc.scrollTop = sc.scrollHeight;
+    if ((route === 'chat' || (route === 'cchat' && direction !== 'pop')) && sc) sc.scrollTop = sc.scrollHeight;
     else if (sc && direction === 'pop' && scrollMemory[route]) sc.scrollTop = scrollMemory[route];
     if (sc) page.classList.toggle('scrolled', sc.scrollTop > 34);
     if (route === 'photo') photoTrackGo(photoOrder.indexOf(activePhoto), false);
@@ -1134,6 +1571,21 @@
       case 'open-app': openApp(button.dataset.app, button.querySelector('.app-glyph')); break;
       case 'open-widget': openApp(button.dataset.target, button); break;
       case 'open-chat': navigate('chat', { chat: button.dataset.chat }); break;
+      case 'open-community': {
+        if (route === 'cchat' && stack[stack.length - 1] === 'community') goBack();
+        else if (route !== 'community') navigate('community');
+        break;
+      }
+      case 'open-cgroup': activeGroup = button.dataset.group; markGroupRead(activeGroup); navigate('cchat'); break;
+      case 'open-cmedia': activeMedia = communityGroups[activeGroup].list.find(m => m.id === button.dataset.mid) || null; if (activeMedia) navigate('cmedia'); break;
+      case 'cm-jump': { const sc = $('.page:not(.leaving) .cm-scroll', win); sc?.scrollTo({ top: sc.scrollHeight, behavior: reducedMotion ? 'auto' : 'smooth' }); break; }
+      case 'banner-tap': { const run = bannerAction; hideBanner(); if (run) run(); break; }
+      case 'notif-ethmar': {
+        const target = button.dataset.target;
+        button.remove();
+        if (target === 'community') openFromQuizNotification(); else openWhatsAppAt(target);
+        break;
+      }
       case 'open-note': navigate('note', { note: button.dataset.note }); break;
       case 'open-mail': markMailRead(button.dataset.mail); navigate('mailmsg', { mail: button.dataset.mail }); break;
       case 'home-dots': goHomePage(homePageIndex() ? 0 : 1); break;
@@ -1208,6 +1660,7 @@
     const target = event.target;
     if (!(target instanceof Element)) return;
     if (target.id === 'pv-track') { photoTrackSync(); return; }
+    if (target.classList.contains('cm-scroll')) updateJump(target);
     if (target.classList.contains('scroll')) target.closest('.page')?.classList.toggle('scrolled', target.scrollTop > 34);
   }, true);
 
@@ -1307,12 +1760,20 @@
     getPhotos: () => photos.map(p => ({ title: p.title })),
     getChatCount: () => chats.length,
     getNoteCount: () => notes.length,
+    getCommunity: () => ({
+      delivered: ethmar.delivered, tapped: ethmar.tapped, liveStep: ethmar.step, liveTotal: LIVE_SEQUENCE.length,
+      announcements: communityGroups.ann.list.length, mathmerina: communityGroups.mth.list.length,
+      annUnread: communityGroups.ann.unread, mthUnread: communityGroups.mth.unread, whatsappBadge: whatsappUnread(),
+      activeGroup, timerPending: !!ethmar.timer,
+      msUntilNext: ethmar.timer ? ethmar.due - Date.now() : null, announceDelay: ethmar.delivered ? null : ethmar.due - ethmar.startedAt,
+    }),
   });
 
   /* ------------------------------------------------------------------ *
    * التشغيل
    * ------------------------------------------------------------------ */
   fitDevice();
+  resetCommunity();
   renderLock();
   renderHome();
   homeEl.classList.add('home-waiting');

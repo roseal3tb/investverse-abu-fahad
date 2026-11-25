@@ -210,6 +210,9 @@ button.lock-round:active { transform: scale(1.12); }
 .app-glyph { position: relative; width: var(--icon); height: var(--icon); font-size: var(--icon); border-radius: 22.6%; display: grid; place-items: center; box-shadow: 0 4px 10px rgba(0, 0, 0, .16); }
 .app-glyph > svg, .mini-icon > svg { border-radius: inherit; display: block; }
 .app-glyph > svg { width: 100%; height: 100%; }
+.app-glyph > .app-icon-image, .mini-icon > .app-icon-image { display: block; width: 100%; height: 100%; object-fit: contain; border-radius: inherit; pointer-events: none; }
+.icon-gmail > .app-icon-image { width: 76%; height: 76%; }
+.icon-whatsapp:has(> .app-icon-image), .icon-alarm:has(> .app-icon-image), .icon-notes:has(> .app-icon-image), .icon-appstore:has(> .app-icon-image), .icon-settings:has(> .app-icon-image), .icon-camera:has(> .app-icon-image) { background: transparent; }
 .icon-whatsapp { background: linear-gradient(180deg, #5df27a, #1caf4a); }
 .icon-bank { background: linear-gradient(160deg, #1a573f, #0a2a1e); }
 .icon-alarm { background: #101010; }
@@ -223,7 +226,9 @@ button.lock-round:active { transform: scale(1.12); }
 .icon-appstore { background: linear-gradient(180deg, #2aa7ff, #0a63f0); }
 .icon-phone { background: linear-gradient(180deg, #63e77a, #22b84e); }
 .icon-safari, .icon-gmail, .icon-calendar { background: #fff; overflow: hidden; }
+.app-glyph.icon-gmail { overflow: visible; }
 .cal-ico { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .04em; line-height: 1; color: #000; }
+.icon-calendar > .cal-ico { border-radius: inherit; background: linear-gradient(#fff, #fff) center / 80% 84% no-repeat, url('assets/app-icons/calendar.webp') center / 100% 100% no-repeat; }
 .cal-ico i { font-style: normal; font-size: .17em; font-weight: 600; color: var(--ios-red); }
 .cal-ico b { font-size: .5em; font-weight: 400; }
 .clock-hands line { transform-box: view-box; transform-origin: 30px 30px; }
@@ -684,6 +689,123 @@ button.mail-row:active { background: #1f2024; }
 .mail-sender { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
 .mail-sender strong { font-weight: 600; color: #fff; }
 .mail-body p { margin-bottom: 12px; font-size: 16px; line-height: 1.85; color: #e3e3e6; }
+
+/* --------------------------------------------------------------------------
+   مجتمع واتساب: مبادرة إثمار 💸💚
+   -------------------------------------------------------------------------- */
+.c-ava { flex: none; display: block; overflow: hidden; border-radius: 50%; background: #103529; }
+.c-ava img, .c-ava svg { display: block; width: 100%; height: 100%; object-fit: cover; }
+.c-ava-square { border-radius: 24%; }
+.c-ava-xs { width: 30px; height: 30px; }
+.c-ava-sm { width: 36px; height: 36px; }
+.c-ava-notif { width: 38px; height: 38px; }
+.c-ava-md { width: 44px; height: 44px; }
+.c-ava-lg { width: 54px; height: 54px; }
+.c-ava-xl { width: 66px; height: 66px; }
+.community-preview .c-ava-lg { width: 52px; height: 52px; }
+
+/* نظرة عامة على المجتمع */
+.page-community { --tint: #2fd063; --page-bg: #0b0b0b; }
+.page-community .nav { background: #1f1f1f; }
+.page-community.scrolled .nav { box-shadow: 0 .5px 0 var(--hairline); }
+.c-hero { display: flex; align-items: center; gap: 14px; padding: 6px 20px 18px; background: #1f1f1f; }
+.c-hero-copy { min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.c-hero-copy strong { font-size: 24px; font-weight: 700; line-height: 1.25; }
+.c-hero-copy small { font-size: 16px; color: var(--ios-gray); }
+.c-section { margin: 16px 20px 2px; font-size: 17px; font-weight: 600; color: #a1a1a6; }
+.c-hint { margin: 0 20px 8px; font-size: 15.5px; color: #a1a1a6; }
+.c-hint span { color: var(--tint); font-weight: 600; }
+.c-groups { display: flex; flex-direction: column; }
+.cg-row { display: flex; align-items: center; gap: 14px; width: 100%; padding: 0 20px; }
+.cg-row:active { background: rgba(255, 255, 255, .06); }
+.cg-copy { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; padding: 13px 0; }
+.cg-row + .cg-row .cg-copy { box-shadow: 0 -.5px 0 var(--hairline); }
+.cg-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.cg-top strong { min-width: 0; font-size: 17px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cg-top time { flex: none; font-size: 14px; color: var(--ios-gray); }
+.cg-top time.is-unread { color: var(--tint); }
+.cg-bottom { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.cg-bottom small { min-width: 0; font-size: 15px; line-height: 1.38; color: var(--ios-gray); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.cg-cam { display: inline-grid; vertical-align: -2px; margin-inline-end: 3px; font-style: normal; }
+.c-empty { margin: 120px 30px 30px; font-size: 14.5px; line-height: 1.55; text-align: center; color: #8e8e93; }
+.c-add { flex: none; padding: 10px 20px calc(var(--hb) + 6px); }
+.c-add span { display: flex; align-items: center; justify-content: center; gap: 8px; height: 52px; border-radius: 26px; font-size: 18px; font-weight: 600; color: #0b0b0b; background: #5ac46f; }
+
+/* محادثات المجتمع */
+.page-cchat { --tint: #2fd063; --page-bg: #1c1c1e; --bubble: #232528; }
+.cm-nav .chat-head { gap: 10px; }
+.cm-community-btn { position: relative; flex: none; display: grid; margin-inline-start: 4px; }
+.cm-community-btn i { position: absolute; bottom: -4px; left: -4px; width: 16px; height: 16px; border-radius: 50%; display: grid; place-items: center; font-style: normal; color: #fff; background: #3a3a3c; box-shadow: 0 0 0 1.5px var(--page-bg); }
+.cm-column { display: flex; flex-direction: column; padding-bottom: 6px; }
+.cm-row { display: flex; align-items: flex-end; gap: 6px; margin-top: 2px; }
+.cm-row.is-first { margin-top: 10px; }
+.cm-row.has-reactions { margin-bottom: 18px; }
+.cm-avatar { flex: none; width: 28px; height: 28px; border-radius: 50%; overflow: hidden; }
+.cm-avatar svg { display: block; width: 100%; height: 100%; }
+.cm-avatar-gap { visibility: hidden; }
+.cm-bubble { position: relative; min-width: 0; max-width: calc(100% - 70px); padding: 6px 10px 7px; border-radius: 18px; font-size: 16.5px; line-height: 1.38; background: var(--bubble); }
+.cm-row.is-last .cm-bubble { border-bottom-right-radius: 0; }
+.cm-tail { position: absolute; bottom: 0; right: -8px; width: 9px; height: 14px; fill: var(--bubble); }
+.cm-author { display: block; max-width: 100%; margin-bottom: 1px; font-size: 14.5px; font-weight: 600; line-height: 1.35; overflow-wrap: anywhere; }
+.cm-text { white-space: pre-wrap; overflow-wrap: anywhere; }
+.cm-link { color: #c58af9; text-decoration: underline; text-underline-offset: 2px; }
+.cm-quote { display: block; margin: 3px -4px 5px; padding: 6px 10px; border-radius: 9px; background: rgba(255, 255, 255, .07); border-inline-start: 4px solid var(--q); }
+.cm-quote b { display: block; font-size: 13.5px; font-weight: 600; color: var(--q); }
+.cm-quote span { display: block; font-size: 14.5px; color: rgba(255, 255, 255, .72); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cm-row.has-image .cm-bubble { width: 268px; }
+.cm-image { display: block; width: calc(100% + 14px); margin: 2px -7px 7px; border-radius: 14px; overflow: hidden; background: #e8eef0; }
+.cm-image img { display: block; width: 100%; height: auto; aspect-ratio: 904 / 1600; }
+.cm-preview { display: flex; flex-direction: column; gap: 2px; margin: 2px -5px 7px; padding: 9px 11px; border-radius: 10px; color: inherit; text-decoration: none; background: rgba(0, 0, 0, .3); }
+.cm-preview b { font-size: 14.5px; font-weight: 600; line-height: 1.35; }
+.cm-preview span { font-size: 13.5px; line-height: 1.4; color: rgba(255, 255, 255, .66); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.cm-preview small { font-size: 12.5px; color: rgba(255, 255, 255, .5); text-align: right; }
+.cm-reactions { position: absolute; z-index: 1; bottom: -18px; inset-inline-start: 8px; display: flex; align-items: center; height: 26px; padding: 0 7px; border-radius: 13px; font-size: 14px; line-height: 1; white-space: nowrap; background: #2c2e31; box-shadow: 0 0 0 2px #0b1014; }
+.cm-reactions b { margin-inline-start: 5px; font-size: 13px; font-weight: 500; color: #d0d4d6; }
+.cm-row.is-jumbo .cm-bubble { padding: 0 2px 2px; background: transparent; }
+.cm-row.is-jumbo .cm-tail { display: none; }
+.cm-row.is-jumbo .cm-text { display: block; font-size: 44px; line-height: 1.15; }
+.cm-row.is-jumbo .bubble-time { float: none; display: inline-block; margin: 2px 0 0; padding: 3px 7px; border-radius: 9px; color: rgba(255, 255, 255, .8); background: rgba(0, 0, 0, .45); }
+.cm-row.is-new .cm-bubble { animation: cm-in .34s cubic-bezier(.2, .9, .3, 1.15) both; transform-origin: 100% 100%; }
+@keyframes cm-in { from { opacity: 0; transform: translateY(10px) scale(.86); } }
+.cm-jump { position: absolute; z-index: 3; left: 14px; bottom: calc(var(--hb) + 74px); width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: rgba(44, 44, 46, .94); box-shadow: 0 4px 14px rgba(0, 0, 0, .4); }
+.cm-jump b { position: absolute; top: -3px; right: -3px; min-width: 0; font-size: 0; }
+.cm-jump b:not(:empty) { width: 12px; height: 12px; border-radius: 50%; background: var(--tint); }
+.cm-readonly { flex: none; padding: 12px 28px calc(var(--hb) + 4px); font-size: 14.5px; line-height: 1.42; text-align: center; color: #8e8e93; background: #1c1c1e; box-shadow: 0 -.5px 0 var(--hairline); }
+.cm-readonly span { color: #c58af9; }
+
+/* عرض صورة الإعلان */
+.page-cmedia { --page-bg: #000; }
+.cmv-head { position: absolute; left: 50%; transform: translateX(-50%); max-width: 62%; display: flex; flex-direction: column; align-items: center; line-height: 1.25; }
+.cmv-head strong { max-width: 100%; font-size: 14px; font-weight: 600; text-align: center; }
+.cmv-head small { font-size: 12px; color: var(--ios-gray); }
+.cmv-stage { flex: 1; min-height: 0; display: grid; place-items: center; padding: 6px 0; }
+.cmv-stage img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.cmv-caption { flex: none; padding: 10px 22px calc(var(--hb) + 10px); font-size: 15px; text-align: center; color: #d1d1d6; }
+
+/* إشعارات واتساب: صورة المجموعة مع أيقونة التطبيق في الزاوية */
+.n-ava { position: relative; flex: none; width: 38px; height: 38px; }
+.n-ava .mini-icon { position: absolute; bottom: -3px; left: -4px; width: 18px; height: 18px; font-size: 18px; border-radius: 5px; box-shadow: 0 0 0 1.5px rgba(30, 30, 30, .9); }
+.banner.banner-msg { padding: 0; }
+.banner .banner-hit { display: flex; align-items: center; gap: 11px; width: 100%; padding: 11px 13px; border-radius: inherit; text-align: start; }
+.banner .banner-copy { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.banner .banner-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.banner .banner-top b { min-width: 0; font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.banner .banner-top time { flex: none; font-size: 13px; opacity: .6; }
+.banner .banner-sender { font-size: 14.5px; font-weight: 600; line-height: 1.35; }
+.banner .banner-text { font-size: 14.5px; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.notif-ethmar .notif-copy em { font-style: normal; font-size: 14px; font-weight: 600; line-height: 1.3; }
+.notif-card.is-arriving { animation: notif-arrive .55s cubic-bezier(.2, .9, .25, 1.1) both; }
+@keyframes notif-arrive { from { opacity: 0; transform: translateY(-18px) scale(.95); } }
+
+/* لما يوصل إشعار إثمار على شاشة قصيرة، تتكدّس الإشعارات الأقدم تحت بعض مثل iOS بدل ما تدفّ أسفل الشاشة */
+@container (max-height: 760px) {
+  .notification-stack:has(.notif-ethmar) > .notif-card:nth-child(n+4) { display: none; }
+  .notification-stack:has(.notif-ethmar) > .notif-card:nth-child(3) { box-shadow: 0 6px 0 -2px rgba(60, 60, 60, .45), 0 11px 0 -5px rgba(60, 60, 60, .3); margin-bottom: 9px; }
+}
+@container (max-height: 640px) {
+  .notification-stack:has(.notif-ethmar) > .notif-card:nth-child(n+3) { display: none; }
+  .notification-stack:has(.notif-ethmar) > .notif-card:nth-child(2) { box-shadow: 0 6px 0 -2px rgba(60, 60, 60, .45), 0 11px 0 -5px rgba(60, 60, 60, .3); margin-bottom: 9px; }
+}
 
 /* الشاشات القصيرة: شاشة القفل تنضغط بدل ما تنقص */
 @container (max-height: 640px) {

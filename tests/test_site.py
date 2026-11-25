@@ -15,7 +15,7 @@ class StaticChecks(unittest.TestCase):
     def test_assets_and_sources_exist(self):
         for path in ('index.html', 'styles.css', 'script.js', 'config.js', 'vercel.json',
                      'assets/investverse-logo.png', 'assets/investverse-logo-dark.png',
-                     'assets/investverse-icon.png', 'assets/investverse-poster.webp', 'assets/wallpaper.webp'):
+                     'assets/investverse-icon.png', 'assets/investverse-poster.jpg', 'assets/ethmar/ethmar-logo.webp', 'assets/wallpaper.webp'):
             self.assertTrue((ROOT / path).is_file(), f'Asset missing: {path}')
         self.assertEqual(len(list((ROOT / 'assets/photos').glob('*.webp'))), 8)
         for x in (ROOT / 'assets/photos').glob('*.webp'):
@@ -38,7 +38,7 @@ class StaticChecks(unittest.TestCase):
             self.assertIn(field + ": ''", cfg)
 
 
-class InteractiveBrowserChecks(unittest.TestCase):
+class ChromiumCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         try:
@@ -58,6 +58,12 @@ class InteractiveBrowserChecks(unittest.TestCase):
     def tearDownClass(cls):
         if hasattr(cls, 'browser'): cls.browser.close()
         if hasattr(cls, 'p'): cls.p.stop()
+
+    def state(self, page, key):
+        return page.evaluate(f'INVESTVERSE_TEST.getState().{key}')
+
+
+class InteractiveBrowserChecks(ChromiumCase):
 
     def page(self, width=390, height=844, mobile=True):
         page = self.browser.new_page(viewport={'width': width, 'height': height}, device_scale_factor=1, is_mobile=mobile, has_touch=mobile)
@@ -83,7 +89,8 @@ class InteractiveBrowserChecks(unittest.TestCase):
             self.assertEqual(page.locator('.app-tile').count(), 14)
             # Seven story chats.
             page.locator('[data-app=whatsapp]').click()
-            self.assertEqual(page.locator('.chat-preview').count(), 7)
+            self.assertEqual(page.locator('.chat-preview[data-chat]').count(), 7)
+            self.assertEqual(page.locator('.community-preview').count(), 1)
             for chat_id in ['group', 'wife', 'friend', 'hr', 'aunt', 'scam', 'old']:
                 self.assertEqual(page.locator(f'[data-chat="{chat_id}"]').count(), 1)
             page.locator('[data-chat=friend]').click()
@@ -253,6 +260,225 @@ class InteractiveBrowserChecks(unittest.TestCase):
             box = page.locator('.keypad').bounding_box()
             self.assertGreaterEqual(box['x'], 0)
             self.assertLessEqual(box['x'] + box['width'], 320)
+        finally:
+            page.close()
+
+
+
+ETHMAR_NAMES = [
+    'رائد المطيري | رئيس مبادرة إثمار', 'غادة العتيبي | نائبة رئيس مبادرة إثمار', 'روز العتيبي | نائبة اللجنة التقنية',
+    'غلا العتيبي | قائدة لجنة الموارد البشرية', 'مجد العتيبي | نائبة لجنة الموارد البشرية', 'نوف بن حثلين | قائدة اللجنة الإعلامية',
+    'أسيل الصعب | نائبة اللجنة الإعلامية', 'سلطان المتعب | قائد لجنة المحتوى المالي', 'الوليد الرشيد | قائد لجنة العلاقات العامة',
+    'العنود القحطاني | قائدة لجنة إدارة المشاريع',
+]
+QUIZ_TEXT = 'تبي تعرف أي نوع مستثمر أنت؟ هالاختبار بيقول لك 👇'
+QUIZ_URL = 'https://inverstverse.vercel.app/'
+
+
+class CommunityChecks(ChromiumCase):
+    """WhatsApp Community: history, 10-second announcement, notification taps and the live group sequence.
+    The page clock is installed and paused, so every delay is advanced explicitly."""
+
+    def page(self, width=390, height=844, mobile=True):
+        import datetime as dt
+        page = self.browser.new_page(viewport={'width': width, 'height': height}, device_scale_factor=1, is_mobile=mobile, has_touch=mobile)
+        self.errors = []
+        page.on('pageerror', lambda e: self.errors.append(str(e)))
+        start = dt.datetime(2026, 11, 25, 21, 0, 0)
+        page.clock.install(time=start)
+        page.set_content(self.html, wait_until='domcontentloaded', timeout=15000)
+        now = page.evaluate('Date.now()')
+        page.clock.pause_at(dt.datetime.fromtimestamp(now / 1000 + 0.05))
+        page.wait_for_timeout(300)
+        return page
+
+    def run_until_announcement(self, page, slack=0):
+        left = self.com(page, 'msUntilNext')
+        page.clock.run_for(max(0, int(left) + slack))
+
+    def com(self, page, key):
+        return page.evaluate(f'INVESTVERSE_TEST.getCommunity().{key}')
+
+    def at(self, page, sel):
+        return page.locator('#appwin .page:not(.leaving) ' + sel).first
+
+    def settle(self, page, ms=450):
+        page.wait_for_timeout(ms)
+
+    def open_whatsapp(self, page):
+        page.locator('[data-action=unlock]').click(); self.settle(page, 700)
+        page.locator('.app-tile[data-app=whatsapp]').click(); self.settle(page, 600)
+
+    def test_history_structure_and_navigation(self):
+        page = self.page()
+        try:
+            self.open_whatsapp(page)
+            row = page.locator('.community-preview')
+            self.assertIn('مبادرة إثمار 💸💚', row.inner_text())
+            row.click(); self.settle(page)
+            self.assertEqual(self.state(page, 'route'), 'community')
+            groups = page.locator('.cg-row')
+            self.assertEqual(groups.count(), 2)
+            self.assertIn('Announcements', groups.nth(0).inner_text())
+            self.assertIn('مثمرينا 💸💚', groups.nth(1).inner_text())
+            # Announcements: three historical messages, the quiz is not there yet.
+            self.at(page, '[data-group=ann]').click(); self.settle(page)
+            ann = self.at(page, '.cm-column').inner_text()
+            self.assertIn('8:00 🔥🔥🔥', ann)
+            self.assertIn('8:30 🔥🔥🔥', ann)
+            self.assertIn('جاهزين تدخلون عالم الاستثمار من منظور مختلف؟', ann)
+            self.assertNotIn(QUIZ_TEXT, ann)
+            self.assertEqual(page.locator('#appwin .page:not(.leaving) .cm-row').count(), 3)
+            self.assertIn('only community admins can send them', self.at(page, '.cm-readonly').inner_text())
+            poster = self.at(page, '.cm-image img')
+            poster.scroll_into_view_if_needed(); page.wait_for_function('document.querySelector("#appwin .page:not(.leaving) .cm-image img").complete')
+            size = poster.evaluate('i => [i.naturalWidth, i.naturalHeight, i.getBoundingClientRect().width, i.getBoundingClientRect().height]')
+            self.assertEqual(size[:2], [904, 1600])
+            self.assertAlmostEqual(size[3] / size[2], 1600 / 904, delta=0.01)
+            # Tapping the poster opens it full screen, and back returns to Announcements.
+            poster.click(); self.settle(page)
+            self.assertEqual(self.state(page, 'route'), 'cmedia')
+            self.assertTrue(self.at(page, '.cmv-stage img').is_visible())
+            self.at(page, '[data-action=back]').click(); self.settle(page)
+            self.assertEqual(self.state(page, 'route'), 'cchat')
+            self.at(page, '[data-action=back]').click(); self.settle(page)
+            self.assertEqual(self.state(page, 'route'), 'community')
+            # مثمرينا: full display names, grouped runs, no notification from history.
+            self.at(page, '[data-group=mth]').click(); self.settle(page)
+            mth = self.at(page, '.cm-column').inner_text()
+            for name in ETHMAR_NAMES:
+                self.assertIn(name, mth if name.split(' |')[0] not in ('رائد المطيري', 'غادة العتيبي') else ann)
+            self.assertEqual(self.com(page, 'mathmerina'), page.locator('#appwin .page:not(.leaving) .cm-row').count())
+            firsts = page.locator('#appwin .page:not(.leaving) .cm-row.is-first').count()
+            self.assertLess(firsts, self.com(page, 'mathmerina'))
+            self.assertTrue(page.locator('#toast').is_hidden())
+            # Back to the Community, then back to the main WhatsApp list.
+            self.at(page, '[data-action=back]').click(); self.settle(page)
+            self.at(page, '[data-action=back]').click(); self.settle(page)
+            self.assertEqual(self.state(page, 'route'), 'whatsapp')
+            self.assertFalse(self.errors, self.errors)
+        finally:
+            page.close()
+
+    def test_ten_second_announcement_and_live_sequence(self):
+        page = self.page()
+        try:
+            self.assertEqual(self.com(page, 'announceDelay'), 10000)
+            page.locator('[data-action=unlock]').click(); self.settle(page, 700)
+            self.run_until_announcement(page, -150)
+            self.assertFalse(self.com(page, 'delivered'))
+            self.assertTrue(page.locator('#toast').is_hidden())
+            self.assertEqual(self.com(page, 'announcements'), 3)
+            page.clock.run_for(300)
+            self.assertTrue(self.com(page, 'delivered'))
+            self.assertEqual(self.com(page, 'announcements'), 4)
+            self.assertEqual(self.com(page, 'annUnread'), 1)
+            self.assertEqual(self.com(page, 'whatsappBadge'), 5)
+            banner = page.locator('#toast')
+            self.assertTrue(banner.is_visible())
+            text = banner.inner_text()
+            for part in ('مبادرة إثمار 💸💚', 'روز العتيبي | نائبة اللجنة التقنية', QUIZ_TEXT):
+                self.assertIn(part, text)
+            self.assertEqual(page.locator('[data-app=whatsapp] .app-badge').inner_text(), '٥')
+            # The group sequence must not start until the notification is tapped.
+            self.assertFalse(self.com(page, 'tapped'))
+            page.clock.run_for(4000)
+            self.assertEqual(self.com(page, 'mathmerina'), 28)
+            banner.locator('[data-action=banner-tap]').click(); self.settle(page, 600)
+            self.assertEqual(self.state(page, 'route'), 'community')
+            self.assertTrue(self.com(page, 'tapped'))
+            self.assertEqual(self.com(page, 'liveStep'), 0)
+            # First live message arrives as a banner while the user is on the Community overview.
+            page.clock.run_for(2700); self.settle(page, 200)
+            self.assertEqual(self.com(page, 'liveStep'), 1)
+            self.assertEqual(self.com(page, 'mthUnread'), 1)
+            self.assertIn('مجد العتيبي | نائبة لجنة الموارد البشرية', page.locator('#toast').inner_text())
+            # Tapping a group notification opens مثمرينا directly.
+            page.locator('#toast [data-action=banner-tap]').click(); self.settle(page, 600)
+            self.assertEqual(self.state(page, 'route'), 'cchat')
+            self.assertEqual(self.com(page, 'activeGroup'), 'mth')
+            self.assertEqual(self.com(page, 'mthUnread'), 0)
+            # While viewing the group, messages append without banners.
+            for _ in range(14):
+                page.clock.run_for(2500); self.settle(page, 120)
+                self.assertTrue(page.locator('#toast').is_hidden() or 'مثمرينا' not in page.locator('#toast').inner_text())
+            self.assertEqual(self.com(page, 'liveStep'), 10)
+            self.assertEqual(self.com(page, 'mathmerina'), 38)
+            self.assertFalse(self.com(page, 'timerPending'))
+            col = self.at(page, '.cm-column').inner_text()
+            self.assertIn('شاركونااااا', col)
+            self.assertEqual(col.count('نزلللل'), 1)
+            sc = self.at(page, '.cm-scroll')
+            self.assertLess(sc.evaluate('s => s.scrollHeight - s.scrollTop - s.clientHeight'), 4)
+            # Reopening WhatsApp and the Community does not duplicate anything.
+            page.locator('[data-action=home]').click(); self.settle(page, 600)
+            page.locator('.app-tile[data-app=whatsapp]').click(); self.settle(page, 600)
+            page.locator('.community-preview').click(); self.settle(page)
+            self.at(page, '[data-group=ann]').click(); self.settle(page)
+            ann = self.at(page, '.cm-column').inner_text()
+            self.assertEqual(ann.count(QUIZ_TEXT), 1)
+            link = self.at(page, '.cm-text a.cm-link')
+            self.assertEqual(link.get_attribute('href'), QUIZ_URL)
+            self.assertEqual(link.get_attribute('target'), '_blank')
+            self.assertEqual(link.inner_text(), QUIZ_URL)
+            self.assertEqual(self.com(page, 'annUnread'), 0)
+            page.clock.run_for(60000)
+            self.assertEqual(self.com(page, 'mathmerina'), 38)
+            self.assertEqual(self.com(page, 'announcements'), 4)
+            self.assertFalse(self.errors, self.errors)
+        finally:
+            page.close()
+
+    def test_link_opens_without_leaving_the_phone(self):
+        page = self.page()
+        try:
+            self.open_whatsapp(page)
+            self.run_until_announcement(page, 200)
+            page.locator('.community-preview').click(); self.settle(page)
+            self.at(page, '[data-group=ann]').click(); self.settle(page)
+            requested = []
+            page.context.on('request', lambda r: requested.append(r.url))
+            with page.context.expect_page(timeout=5000) as info:
+                self.at(page, '.cm-text a.cm-link').click()
+            popup = info.value
+            popup.wait_for_timeout(800)
+            # الرابط يفتح في تبويب جديد بنفس العنوان بالضبط، والجوال يبقى على حاله
+            self.assertIn(QUIZ_URL, requested)
+            self.assertIsNot(popup, page)
+            popup.close()
+            self.assertEqual(self.state(page, 'route'), 'cchat')
+        finally:
+            page.close()
+
+    def test_delivery_while_locked_and_restart(self):
+        page = self.page()
+        try:
+            self.run_until_announcement(page, 200); self.settle(page, 300)
+            self.assertTrue(page.locator('#toast').is_hidden())
+            card = page.locator('#lock .notif-ethmar')
+            self.assertEqual(card.count(), 1)
+            self.assertIn('روز العتيبي | نائبة اللجنة التقنية', card.inner_text())
+            card.click(); self.settle(page, 1200)
+            self.assertEqual(self.state(page, 'route'), 'community')
+            self.assertTrue(self.com(page, 'tapped'))
+            page.clock.run_for(8000)
+            self.assertGreaterEqual(self.com(page, 'liveStep'), 2)
+            # Restart follows the existing reset: everything returns to the start and the 10-second timer re-arms.
+            page.clock.run_for(45000); self.settle(page, 400)  # التسلسل يخلص وآخر إشعار يختفي
+            self.assertEqual(self.com(page, 'liveStep'), 10)
+            self.assertTrue(page.locator('#toast').is_hidden())
+            page.locator('[data-action=home]').click(); self.settle(page, 600)
+            page.locator('.app-tile[data-app=vault]').click(); self.settle(page, 600)
+            page.keyboard.type('4298'); page.clock.run_for(400); self.settle(page, 500)
+            self.assertTrue(page.locator('.invite-poster').is_visible())
+            page.locator('[data-action=restart]').click(); self.settle(page, 600)
+            self.assertFalse(self.com(page, 'delivered'))
+            self.assertFalse(self.com(page, 'tapped'))
+            self.assertEqual(self.com(page, 'mathmerina'), 28)
+            self.assertEqual(self.com(page, 'announcements'), 3)
+            self.assertTrue(self.com(page, 'timerPending'))
+            self.assertEqual(page.locator('#lock .notif-ethmar').count(), 0)
+            self.assertFalse(self.errors, self.errors)
         finally:
             page.close()
 
